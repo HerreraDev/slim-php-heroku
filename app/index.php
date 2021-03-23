@@ -1,20 +1,21 @@
 <?php
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
 
-require_once '../vendor/autoload.php';
-
+include_once "Triangulo.php";
+include_once "Rectangulo.php";
 
 
-$app = new \Slim\App([]);
+$rectangulo = new Rectangulo(7,6);
+
+$rectangulo->SetColor("Rojo");
+
+$rectangulo->ToString();
 
 
+echo "-------------------------------", "<br/>";
 
-$app->get('[/]', function (Request $request, Response $response) {    
-    $response->getBody()->write("TEST");
-    return $response;
+$triangulo = new Triangulo (7,6);
 
-});
+$triangulo->SetColor("Verde");
 
-
-$app->run();
+$triangulo->ToString();
+?>
