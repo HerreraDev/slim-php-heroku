@@ -1,0 +1,51 @@
+Manejo de archivos:
+
+fopen: duevle una posicion de memoria.
+utilizar modo a que es para abrir un archivo de escritura.
+y el w tambien.
+
+Si se trabaja como parte de nuestro sistema:
+Si se traba como aparte: 
+
+-------------------
+fclose: cierra el archivo.
+
+-------------------
+fread(puntero, filesize(archivo)): leer de un archivo abierto.
+
+-------------------
+fgets: leer una linea de un archivo abierto.
+
+-------------------
+feof(): indica si se termion el archivo
+
+-------------------
+fwrite o fputs: permiten escribir en un archivo abierto. La funcion para cuando llegue al fin del archivo o cuando alcance la longitud especificada.
+
+-------------------
+copy(archivo origen, archivo destino)
+
+-------------------
+unlink: borrar un archivo.
+
+-------------------
+===========================================================================
+Envio de datos:
+
+Para comunicarme con el backend se usa el protocolo HTTP:
+permite transferir texto, hyper texto.
+
+Metodo GET:
+Se envia en la URL.
+Se puede almacenar en cache.
+
+Metodo POST:
+Se envia en el cuerpo del mensaje.
+
+Manejo de formularios:
+Los formularios hacen peticiones al servidor, a una direccion en particular. El servidor devuelve la informacion.
+
+
+
+TODA LA INFO COMPLETA ESTA EN EL CLASSROOM.
+
