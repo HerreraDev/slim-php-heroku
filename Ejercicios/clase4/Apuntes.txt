@@ -1,6 +1,0 @@
-Subir archivos al servidor:
-
-move_uploaded_file es un metodo que tiene permisos de manipular la carpeta destino en el servidor.
-
-leyo el pdf.
-======================================================================
