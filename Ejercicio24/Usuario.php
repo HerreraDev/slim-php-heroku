@@ -9,13 +9,27 @@ class Usuario
     private $_fechaRegistro;
     private $_rutaFoto;
     
-    public function __construct($_nombre, $_clave, $_mail, $_id = "Sin ID", $_fechaRegistro = "Sin fecha", $_rutaFoto = "Aun no tiene ruta")
+    public function __construct($_nombre, $_clave, $_mail, $_id = null, $_fechaRegistro = null, $_rutaFoto = "sin ruta")
     {
         $this->_nombre = $_nombre;
         $this->_clave = $_clave;
         $this->_mail = $_mail;
-        $this->_id = random_int(1,10000);
-        $this->_fechaRegistro = new DateTime("now");
+        if($_id == null)
+        {
+            $this->_id = random_int(1,10000);
+        }
+        else
+        {
+            $this->_id = $_id;
+        }
+        if($_fechaRegistro == null)
+        {
+            $this->_fechaRegistro = new DateTime("now");
+        }
+        else
+        {
+            $this->_fechaRegistro = $_fechaRegistro;
+        }
         $this->_rutaFoto = $_rutaFoto;
     }
     
@@ -26,7 +40,7 @@ class Usuario
 
     public function UsuarioToJson()
     {
-        return $this->_nombre . "," . "<img src='".$this->GetRutaFoto()."' width='100px' height='100px'/>";
+        return "Nombre: " . $this->_nombre . "," . " Foto: " . "<img src='".$this->GetRutaFoto()."' width='100px' height='100px'/>";
     }
 
 

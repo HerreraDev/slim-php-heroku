@@ -134,9 +134,15 @@ class Usuario
 
     public static function GuardarJsonEImagen(Usuario $user)
     {
-        $user->GuardarEnJson();
+        if($user->GuardarEnJson() && move_uploaded_file($_FILES["foto"]["tmp_name"], $user->_rutaFoto))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
 
-        move_uploaded_file($_FILES["foto"]["tmp_name"], $user->_rutaFoto);
     }
 
     public static function DibujarLista($lista)

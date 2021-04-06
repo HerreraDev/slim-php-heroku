@@ -15,7 +15,14 @@ if(isset($_POST["nombre"]) && isset($_POST["clave"]) && isset($_POST["mail"]) &&
     $user = new Usuario($nombre, $clave, $mail, $destino);
         
 
-    Usuario::GuardarJsonEImagen($user);
+    if(Usuario::GuardarJsonEImagen($user))
+    {
+        echo "Usuario registrado con exito!"
+    }
+    else
+    {
+        echo "Fallo el guardado del JSON o el mover la imagen";
+    }
 
     
 }
