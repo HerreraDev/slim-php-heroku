@@ -12,7 +12,7 @@ switch($archivoParaLeer)
         Usuario::DibujarListaJSON($arrayUsuarios);
         break;
     default:
-        "ERROR. Archivo inexsistente";
+        echo "ERROR. Archivo inexsistente";
     break;
 
 }
