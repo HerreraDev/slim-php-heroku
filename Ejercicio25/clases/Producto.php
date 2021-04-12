@@ -161,7 +161,7 @@ class Producto
             }
             else
             {
-                Producto::GuardarEnJson($prod);
+                Producto::GuardarEnJson($prod, "a");
                 echo "Ingresado";
             }
         }
