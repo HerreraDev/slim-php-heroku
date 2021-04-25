@@ -1,0 +1,11 @@
+a :{ archivo :Usuario.php, renglón :394}
+b:{ archivo :Producto.php, renglón :398}
+c:{ archivo :Venta.php, renglón :202}
+d:{ archivo :Venta.php, renglón :222}
+e:{ archivo :Venta.php, renglón :239}
+f:{ archivo :Venta.php, renglón :249}
+g:{ archivo :Venta.php, renglón :257}
+h:{ archivo :Venta.php, renglón :265}
+i:{ archivo :Venta.php, renglón :275}
+j:{ archivo :Usuario.php, renglón :423}
+k:{ archivo :Venta.php, renglón :285}
