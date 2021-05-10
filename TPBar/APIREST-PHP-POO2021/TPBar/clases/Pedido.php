@@ -4,11 +4,12 @@
 class Pedido{ //pedido
 
     public $idPedido;
-    public $numeroPedido; //seria numero de pedido
+    public $numeroPedido; 
+    public $nombreCliente;
+    public $numero_de_mesa;
+    public $productos;
     
-    //array de productos
-    //idUsuario
-    //numero_de_mesa
+
     
 
 

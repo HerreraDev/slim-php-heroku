@@ -12,7 +12,10 @@ class usuarioApi extends Usuario implements IApiUsable
     }
      public function TraerTodos($request, $response, $args) {
       	$todosLosUsuarios=Usuario::TraerTodoLosUsuarios();
-     	$newResponse = $response->withJson($todosLosUsuarios, 200);  
+
+        Usuario::DibujarTablaUsuario($todosLosUsuarios);
+
+     	$newResponse = $response->withJson("Tabla de usuarios: ",200);  
     	return $newResponse;
     }
       public function CargarUno($request, $response, $args) {

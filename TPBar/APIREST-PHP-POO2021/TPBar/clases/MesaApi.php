@@ -12,7 +12,10 @@ class MesaApi extends Mesa implements IApiUsable
     }
      public function TraerTodos($request, $response, $args) {
       	$todasLasMesas=Mesa::TraerTodasLasMesas();
-     	$newResponse = $response->withJson($todasLasMesas, 200);  
+
+        Mesa::DibujarTablaMesa($todasLasMesas);
+
+     	$newResponse = $response->withJson("Tabla de mesas: ", 200);  
     	return $newResponse;
     }
       public function CargarUno($request, $response, $args) {

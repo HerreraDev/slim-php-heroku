@@ -1,5 +1,8 @@
 <?php
 
+require_once './fpdf183/fpdf.php';
+
+
 class Usuario
 {
     public $idUsuario;
@@ -181,6 +184,48 @@ class Usuario
 	public function mostrarDatos()
 	{
         return "Datos:".$this->nombre."  ".$this->apellido." ".$this->clave." ".$this->mail." ".$this->empleo." ".$this->fecha_de_ingreso;
+	}
+
+	public static function DibujarTablaUsuario($lista){
+
+		echo "<br/>";
+        echo "<table>";
+		//echo "Id	Nombre	Apellido	Mail	Clave	Fecha de ingreso	Empleo";
+		foreach($lista as $user)
+		{
+			echo "<tr>";
+			foreach($user as $item)
+			{
+				echo "<td>$item</td>";
+			}
+            
+			echo "</tr>";
+		}
+        echo "</table>";
+		echo "<br/>";
+
+	}
+
+	public static function GenerarPdf()
+	{
+		$lista = self::TraerTodoLosUsuarios();
+
+		$string = "";
+		foreach($lista as $user){
+			foreach($user as $item){
+				$string = $string . $item;
+			}
+		}
+
+		echo $string;
+
+		$pdf = new FPDF('P','mm','A4');
+		$pdf->AddPage();
+		$pdf->SetFont('Arial','B',16);
+		$pdf->Cell(40,10,$string);
+		$pdf->Output('./pdfs/users.pdf','F');
+
+		echo "pdf generado";
 	}
 }
    

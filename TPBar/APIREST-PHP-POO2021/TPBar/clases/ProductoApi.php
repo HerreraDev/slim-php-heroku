@@ -12,7 +12,10 @@ class ProductoApi extends Producto implements IApiUsable
     }
      public function TraerTodos($request, $response, $args) {
       	$todosLosProductos=Producto::TraerTodoLosProductos();
-     	$newResponse = $response->withJson($todosLosProductos, 200);  
+
+        Producto::DibujarTablaProducto($todosLosProductos);
+
+     	$newResponse = $response->withJson("Tabla de productos: ", 200);  
     	return $newResponse;
     }
       public function CargarUno($request, $response, $args) {
@@ -26,6 +29,15 @@ class ProductoApi extends Producto implements IApiUsable
         $fecha_de_creacion = date("Y-m-d");
         $fecha_de_modificacion = date("Y-m-d");
 
+
+        $tipo = strtolower($tipo);
+
+        if($tipo != "bar" && $tipo != "cerveza" && $tipo != "cocina")
+        {
+          $response->getBody()->write("ERROR. Solo se pueden ingresar los siguientes tipos de producto: bar - cerveza - cocina.");
+          return $response;
+        }
+
         $miProducto = new Producto();
         
         $miProducto->codigo_de_barra=$codigo_de_barra;
@@ -36,7 +48,17 @@ class ProductoApi extends Producto implements IApiUsable
         $miProducto->fecha_de_creacion=$fecha_de_creacion;
         $miProducto->fecha_de_modificacion=$fecha_de_modificacion;
 
-        $miProducto->InsertarElProductoParametros();
+        if(Producto::VerificarProductoDB($miProducto))
+        {
+          $miProducto->ModificarProductoParametros();
+          $response->getBody()->write("ADVERTENCIA. Como el producto ya existia, se actualizaron sus datos");
+        }
+        else
+        {
+          $miProducto->InsertarElProductoParametros();
+          $response->getBody()->write("Se ingreso el Producto nuevo");
+        }
+
 
         /*$archivos = $request->getUploadedFiles();
         $destino="./fotos/productos/";
@@ -50,7 +72,6 @@ class ProductoApi extends Producto implements IApiUsable
 
         $archivos['foto']->moveTo($destino.$nombre.".".$extension[0]);
         */
-        $response->getBody()->write("se guardo el Producto");
 
         return $response;
     }

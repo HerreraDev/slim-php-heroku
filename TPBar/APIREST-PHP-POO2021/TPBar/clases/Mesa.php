@@ -87,6 +87,26 @@ class Mesa{
 	}
 
 
+	public static function DibujarTablaMesa($lista){
+
+		echo "<br/>";
+        echo "<table>";
+		foreach($lista as $user)
+		{
+			echo "<tr>";
+			foreach($user as $item)
+			{
+				echo "<td>$item</td>";
+			}
+            
+			echo "</tr>";
+		}
+        echo "</table>";
+		echo "<br/>";
+
+	}
+
+
 
 }
 

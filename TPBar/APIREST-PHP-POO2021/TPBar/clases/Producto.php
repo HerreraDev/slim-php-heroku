@@ -34,13 +34,13 @@ class Producto{
 				stock=:stock,
                 precio=:precio,
                 fecha_de_modificacion=:fecha_de_modificacion
-				WHERE idProducto=:id");
+				WHERE codigo_de_barra=:codigo_de_barra");
         
                 
         $consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
-		$consulta->bindValue(':id',$this->idProducto, PDO::PARAM_INT);
+		$consulta->bindValue(':codigo_de_barra',$this->codigo_de_barra, PDO::PARAM_INT);
 		$consulta->bindValue(':tipo',$this->tipo, PDO::PARAM_STR);
-        $consulta->bindValue(':stock',$this->stock, PDO::PARAM_STR);
+        $consulta->bindValue(':stock',$this->stock, PDO::PARAM_INT);
         $consulta->bindValue(':precio',$this->precio, PDO::PARAM_INT);
         $consulta->bindValue(':fecha_de_modificacion',$this->fecha_de_modificacion, PDO::PARAM_STR);
 		return $consulta->execute();
@@ -115,7 +115,24 @@ class Producto{
 
 
 
+	public static function DibujarTablaProducto($lista){
 
+		echo "<br/>";
+        echo "<table>";
+		foreach($lista as $user)
+		{
+			echo "<tr>";
+			foreach($user as $item)
+			{
+				echo "<td>$item</td>";
+			}
+            
+			echo "</tr>";
+		}
+        echo "</table>";
+		echo "<br/>";
+
+	}
 
 
 

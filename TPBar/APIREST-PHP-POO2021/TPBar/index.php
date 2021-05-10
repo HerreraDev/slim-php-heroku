@@ -33,6 +33,8 @@ $app = new \Slim\App(["settings" => $config]);
 $app->group('/usuario', function () {
  
   $this->get('/', \usuarioApi::class . ':traerTodos');
+
+  $this->get('/pdf', \Usuario::class . ':GenerarPdf');
  
   $this->get('/{id}', \usuarioApi::class . ':traerUno');
 
