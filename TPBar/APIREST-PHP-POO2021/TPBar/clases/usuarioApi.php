@@ -25,6 +25,14 @@ class usuarioApi extends Usuario implements IApiUsable
         $empleo= $ArrayDeParametros['empleo'];
         $fecha_de_ingreso = date("Y-m-d");
 
+        $empleo = strtolower($empleo);
+
+        if($empleo != "bartender" && $empleo != "cervecero" && $empleo != "cocinero" && $empleo != "mozo" && $empleo != "socio")
+        {
+          $response->getBody()->write("ERROR. Solo se pueden ingresar los siguientes empleos: bartender - cervecero - cocinero - mozo - socio.");
+          return $response;
+        }
+
         $miUsuario = new Usuario();
         $miUsuario->nombre=$nombre;
         $miUsuario->apellido=$apellido;
@@ -33,7 +41,23 @@ class usuarioApi extends Usuario implements IApiUsable
         $miUsuario->empleo=$empleo;
         $miUsuario->fecha_de_ingreso=$fecha_de_ingreso;
 
-        $miUsuario->InsertarElUsuarioParametros();
+
+
+
+
+
+        if(Usuario::VerificarUsuarioDB($miUsuario) == 0 || Usuario::VerificarUsuarioDB($miUsuario) == 1)
+        {
+          $response->getBody()->write("ERROR. Ya existe un usuario registrado con ese mail, ingrese otro.");
+        }
+        else
+        {
+          $miUsuario->InsertarElUsuarioParametros();
+          $response->getBody()->write("Se registro el usuario con exito");
+
+        }
+
+        
 
 
         /*
@@ -49,7 +73,6 @@ class usuarioApi extends Usuario implements IApiUsable
 
         $archivos['foto']->moveTo($destino.$nombre.".".$extension[0]);
         */
-        $response->getBody()->write("se guardo el usuario");
 
         return $response;
     }
