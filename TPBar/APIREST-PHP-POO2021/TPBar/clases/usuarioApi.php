@@ -13,9 +13,9 @@ class usuarioApi extends Usuario implements IApiUsable
      public function TraerTodos($request, $response, $args) {
       	$todosLosUsuarios=Usuario::TraerTodoLosUsuarios();
 
-        Usuario::DibujarTablaUsuario($todosLosUsuarios);
+        //Usuario::DibujarTablaUsuario($todosLosUsuarios);
 
-     	$newResponse = $response->withJson("Tabla de usuarios: ",200);  
+     	$newResponse = $response->withJson($todosLosUsuarios,200);  
     	return $newResponse;
     }
       public function CargarUno($request, $response, $args) {

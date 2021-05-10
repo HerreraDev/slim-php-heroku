@@ -13,9 +13,9 @@ class ProductoApi extends Producto implements IApiUsable
      public function TraerTodos($request, $response, $args) {
       	$todosLosProductos=Producto::TraerTodoLosProductos();
 
-        Producto::DibujarTablaProducto($todosLosProductos);
+        //Producto::DibujarTablaProducto($todosLosProductos);
 
-     	$newResponse = $response->withJson("Tabla de productos: ", 200);  
+     	$newResponse = $response->withJson($todosLosProductos, 200);  
     	return $newResponse;
     }
       public function CargarUno($request, $response, $args) {
