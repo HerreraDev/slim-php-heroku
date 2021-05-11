@@ -134,6 +134,44 @@ class Producto{
 
 	}
 
+	public static function ObtenerIdProductoPorNombre($nombreProd)
+    {
+
+        $arrayProductos = array();
+        $arrayProductos = self::TraerTodoLosProductos();
+
+        $idProd = -1;
+        foreach($arrayProductos as $prod)
+        {
+            if($prod->nombre == $nombreProd)
+            {
+                $idProd = $prod->idProducto;
+				break;
+            }
+        }
+		return $idProd;
+	}
+
+	public static function CalcularPrecioFinal($pedido){
+		$cant = $pedido->cantidad;
+		$auxIdProd = $pedido->id_producto;
+
+	    $prods = self::TraerTodoLosProductos();
+		$precioProd = -1;
+
+	   foreach($prods as $prod)
+	   {
+		   if($prod->idProducto == $auxIdProd)
+		   {
+			   $precioProd = $prod->precio;
+			   break;
+		   }
+	   }
+
+	   return $cant * $precioProd;
+
+	}
+
 
 
 

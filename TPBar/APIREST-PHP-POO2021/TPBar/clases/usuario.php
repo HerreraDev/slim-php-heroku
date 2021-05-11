@@ -227,6 +227,24 @@ class Usuario
 
 		echo "pdf generado";
 	}
+
+	public static function ObtenerIdPorMail($mail)
+    {
+
+        $arrayUsuarios = array();
+        $arrayUsuarios = self::TraerTodoLosUsuarios();
+
+        $idUsuario = -1;
+        foreach($arrayUsuarios as $usuario)
+        {
+            if($usuario->mail == $mail)
+            {
+                $idUsuario = $usuario->idUsuario;
+				break;
+            }
+        }
+		return $idUsuario;
+	}
 }
    
 

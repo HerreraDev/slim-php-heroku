@@ -8,7 +8,11 @@ require_once './clases/AccesoDatos.php';
 require_once './clases/usuarioApi.php';
 require_once './clases/ProductoApi.php';
 require_once './clases/MesaApi.php';
+require_once './clases/PedidoApi.php';
 
+
+require_once './clases autenticacion/MWparaCORS.php';
+require_once './clases autenticacion/MWparaAutenticar.php';
 
 
 $config['displayErrorDetails'] = true;
@@ -76,9 +80,22 @@ $app->group('/mesa', function () {
   
   $this->put('/', \MesaApi::class . ':ModificarUno');
          
+})->add(\MWparaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
+$app->group('/pedido', function () {
+ 
+  $this->get('/', \PedidoApi::class . ':traerTodos');
+   
+  $this->get('/{id}', \PedidoApi::class . ':traerUno');
+  
+  $this->post('/', \PedidoApi::class . ':CargarUno');
+  
+  $this->delete('/{id}', \PedidoApi::class . ':BorrarUno');
+  
+  $this->put('/', \PedidoApi::class . ':ModificarUno');
+  
+       
 });
-
-
 
 
 

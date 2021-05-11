@@ -106,6 +106,24 @@ class Mesa{
 
 	}
 
+	public static function ObtenerIdPorNumeroMesa($numDeMesa)
+    {
+
+        $arrayMesas = array();
+        $arrayMesas = self::TraerTodasLasMesas();
+
+        $idMesa = -1;
+        foreach($arrayMesas as $mesa)
+        {
+            if($mesa->numero_de_mesa == $numDeMesa)
+            {
+                $idMesa = $mesa->idMesa;
+				break;
+            }
+        }
+		return $idMesa;
+	}
+
 
 
 }
