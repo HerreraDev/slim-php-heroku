@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Pedido.php';
+require_once './clases/Pedido.php';
 require_once 'mesa.php';
 require_once 'usuario.php';
 require_once 'producto.php';
