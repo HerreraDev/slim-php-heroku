@@ -12,7 +12,7 @@ require_once './clases/PedidoApi.php';
 
 
 require_once './clases autenticacion/MWparaCORS.php';
-require_once './clases autenticacion/MWParaAutenticar.php';
+require_once './clases autenticacion/MWparaAutenticar.php';
 
 
 $config['displayErrorDetails'] = true;

@@ -42,10 +42,22 @@ class usuarioApi extends Usuario implements IApiUsable
         $miUsuario->clave=$clave;
         $miUsuario->mail=$mail;
         $miUsuario->empleo=$empleo;
+        
         $miUsuario->fecha_de_ingreso=$fecha_de_ingreso;
 
+        $archivos = $request->getUploadedFiles();
+        $destino="./fotos/usuarios/";
+        //var_dump($archivos);
+        //var_dump($archivos['foto']);
 
+        $nombreAnterior=$archivos['foto']->getClientFilename();
+        $extension= explode(".", $nombreAnterior)  ;
+        //var_dump($nombreAnterior);
+        $extension=array_reverse($extension);
 
+        $archivos['foto']->moveTo($destino.$nombre.".".$extension[0]);
+
+        $miUsuario->ruta_foto=$destino.$nombre.".".$extension[0];
 
 
 
@@ -63,19 +75,9 @@ class usuarioApi extends Usuario implements IApiUsable
         
 
 
-        /*
-        $archivos = $request->getUploadedFiles();
-        $destino="./fotos/usuarios/";
-        //var_dump($archivos);
-        //var_dump($archivos['foto']);
-
-        $nombreAnterior=$archivos['foto']->getClientFilename();
-        $extension= explode(".", $nombreAnterior)  ;
-        //var_dump($nombreAnterior);
-        $extension=array_reverse($extension);
-
-        $archivos['foto']->moveTo($destino.$nombre.".".$extension[0]);
-        */
+        
+        
+        
 
         return $response;
     }

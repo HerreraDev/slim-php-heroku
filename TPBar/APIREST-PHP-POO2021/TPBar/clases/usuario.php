@@ -12,6 +12,7 @@ class Usuario
     public $mail;
 	public $fecha_de_ingreso;
     public $empleo;
+	public $ruta_foto;
 
 
     public function BorrarUsuario()
@@ -72,7 +73,8 @@ class Usuario
 				apellido=:apellido,
 				clave=:clave,
                 mail=:mail,
-                empleo=:empleo
+                empleo=:empleo,
+				ruta_foto=:ruta_foto
 				WHERE idUsuario=:id");
 			$consulta->bindValue(':id',$this->idUsuario, PDO::PARAM_INT);
 			$consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
@@ -80,18 +82,21 @@ class Usuario
             $consulta->bindValue(':clave',$this->clave, PDO::PARAM_STR);
             $consulta->bindValue(':mail',$this->mail, PDO::PARAM_STR);
             $consulta->bindValue(':empleo',$this->empleo, PDO::PARAM_STR);
+			$consulta->bindValue(':ruta_foto',$this->ruta_foto, PDO::PARAM_STR);
+
 			return $consulta->execute();
 	 }
 
      public function InsertarElUsuarioParametros()
 	 {
 				$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-				$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuario (nombre,apellido,clave,mail,empleo,fecha_de_ingreso)values(:nombre,:apellido,:clave,:mail,:empleo,:fecha_de_ingreso)");
+				$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuario (nombre,apellido,clave,mail,empleo,ruta_foto,fecha_de_ingreso)values(:nombre,:apellido,:clave,:mail,:empleo,:ruta_foto,:fecha_de_ingreso)");
 			    $consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
                 $consulta->bindValue(':apellido',$this->apellido, PDO::PARAM_STR);
                 $consulta->bindValue(':clave',$this->clave, PDO::PARAM_STR);
                 $consulta->bindValue(':mail',$this->mail, PDO::PARAM_STR);
                 $consulta->bindValue(':empleo',$this->empleo, PDO::PARAM_STR);
+				$consulta->bindValue(':ruta_foto',$this->ruta_foto, PDO::PARAM_STR);
                 $consulta->bindValue(':fecha_de_ingreso',$this->fecha_de_ingreso, PDO::PARAM_STR);
 				$consulta->execute();
 				return $objetoAccesoDato->RetornarUltimoIdInsertado();
@@ -118,7 +123,7 @@ class Usuario
 	public static function TraerUnUsuario($id) 
 	{
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("select idUsuario,nombre, apellido, clave, mail, empleo,fecha_de_ingreso from usuario where idUsuario = $id");
+			$consulta =$objetoAccesoDato->RetornarConsulta("select idUsuario,nombre, apellido, clave, mail, empleo,ruta_foto, fecha_de_ingreso from usuario where idUsuario = $id");
 			$consulta->execute();
 			$usuarioBuscado= $consulta->fetchObject('Usuario');
 			return $usuarioBuscado;					
