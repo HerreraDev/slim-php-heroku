@@ -1,9 +1,9 @@
 <?php
 
 require_once './clases/Pedido.php';
-require_once './clases/mesa.php';
+require_once './clases/Mesa.php';
 require_once './clases/usuario.php';
-require_once './clases/producto.php';
+require_once './clases/Producto.php';
 
 
 
