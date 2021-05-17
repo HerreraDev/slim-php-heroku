@@ -1,6 +1,6 @@
 <?php
-require_once 'Mesa.php';
-require_once 'IApiUsable.php';
+require_once './clases/Mesa.php';
+require_once './clases/IApiUsable.php';
 
 class MesaApi extends Mesa implements IApiUsable
 {

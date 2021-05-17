@@ -1,13 +1,13 @@
 <?php
 
 require_once './clases/Pedido.php';
-require_once 'mesa.php';
-require_once 'usuario.php';
-require_once 'producto.php';
+require_once './clases/mesa.php';
+require_once './clases/usuario.php';
+require_once './clases/producto.php';
 
 
 
-require_once 'IApiUsable.php';
+require_once './clases/IApiUsable.php';
 
 class PedidoApi extends Pedido implements IApiUsable
 {

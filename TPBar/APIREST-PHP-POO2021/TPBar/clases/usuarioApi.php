@@ -1,6 +1,6 @@
 <?php
-require_once 'usuario.php';
-require_once 'IApiUsable.php';
+require_once './clases/usuario.php';
+require_once './clases/IApiUsable.php';
 
 class usuarioApi extends Usuario implements IApiUsable
 {
