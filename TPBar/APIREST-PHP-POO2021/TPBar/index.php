@@ -48,7 +48,7 @@ $app->group('/usuario', function () {
 
   $this->put('/', \usuarioApi::class . ':ModificarUno');
 
-  //$this->post('/login', \usuarioApi::class . ':LoginUsuario');
+  $this->post('/login', \usuarioApi::class . ':LoginUsuario');
 
      
 });
@@ -66,7 +66,7 @@ $app->group('/producto', function () {
   $this->put('/', \ProductoApi::class . ':ModificarUno');
   
        
-});
+})->add(\MWParaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
 $app->group('/mesa', function () {
  
@@ -80,7 +80,7 @@ $app->group('/mesa', function () {
   
   $this->put('/', \MesaApi::class . ':ModificarUno');
          
-})->add(\MWparaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+});
 
 $app->group('/pedido', function () {
  
@@ -93,9 +93,21 @@ $app->group('/pedido', function () {
   $this->delete('/{id}', \PedidoApi::class . ':BorrarUno');
   
   $this->put('/', \PedidoApi::class . ':ModificarUno');
+
+
   
        
-});
+})->add(\MWParaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
+
+$app->group('/pendientes', function(){
+
+  $this->get('/', \PedidoApi::class . ':TraerPedidoPendiente');
+
+  
+
+})->add(\MWParaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
 
 
 

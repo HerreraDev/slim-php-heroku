@@ -62,16 +62,7 @@ class Producto{
 			$consulta->execute();
 			return $objetoAccesoDato->RetornarUltimoIdInsertado();
 	 }
-
-	 public function GuardarUsuario()
-	 {
-	 	if($this->id>0)
-	 		{
-	 			$this->ModificarUsuarioParametros();
-	 		}else {
-	 			$this->InsertarElUsuarioParametros();
-	 		}
-	 }
+	 
 
      public static function TraerTodoLosProductos()
 	{

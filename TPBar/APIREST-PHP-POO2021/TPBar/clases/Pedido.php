@@ -52,6 +52,38 @@ class Pedido{
      }
 
 
+     public static function TraerPendientes($empleo){
+
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+
+
+        switch ($empleo) {
+            case "Socio":
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
+                break;
+            case "Mozo":
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
+                break;
+            case "Bartender":
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'bar' and estado = 'con cliente esperando pedido'");
+                break;
+            case "Cervezero":
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'cerveza' and estado = 'con cliente esperando pedido'");
+                break;
+            case "Cocinero":
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'cocina' and estado = 'con cliente esperando pedido'");
+                break;
+            default:
+                echo "ERROR, el usuario no es de los esperados.";
+                break;
+        }
+
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_OBJ);		
+
+     }
+
+
 
 
 }

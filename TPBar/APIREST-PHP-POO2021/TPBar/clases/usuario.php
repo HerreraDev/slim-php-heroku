@@ -176,6 +176,7 @@ class Usuario
                 if($usuario->clave == $user->clave)
                 {
                     $verificado = 1;
+					$user->empleo = $usuario->empleo;
                 }
                 else
                 {

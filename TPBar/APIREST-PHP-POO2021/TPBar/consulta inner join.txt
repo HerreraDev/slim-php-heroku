@@ -1,0 +1,7 @@
+SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = "cocina" and estado = "con cliente esperando pedido"
+
+SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = "bar" and estado = "con cliente esperando pedido"
+
+SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = "cerveza" and estado = "con cliente esperando pedido"
+
+SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto;

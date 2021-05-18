@@ -39,7 +39,7 @@ class ProductoApi extends Producto implements IApiUsable
         }
 
         $miProducto = new Producto();
-        
+
         $miProducto->codigo_de_barra=$codigo_de_barra;
         $miProducto->nombre=$nombre;
         $miProducto->tipo=$tipo;

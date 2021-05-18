@@ -171,30 +171,41 @@ class PedidoApi extends Pedido implements IApiUsable
         */
     }
 
-    // public function LoginPedido($request, $response, $args)
-    // {
-    //     $ArrayDeParametros = $request->getParsedBody();
-
-    //     $mail = $ArrayDeParametros['mail'];
-    //     $clave = $ArrayDeParametros['clave'];
-
-    //     $user = new Pedido();
-    //     $user->mail=$mail;
-    //     $user->clave=$clave;
-
-    //     $respuesta = Pedido::VerificarPedidoDB($user);
-
-    //     switch($respuesta){
-    //         case -1:
-    //             echo "No existe";
-    //             break;
-    //         case 0:
-    //             echo "Mail correcto pero clave incorrecta";
-    //             break;
-    //         case 1:
-    //             echo "Logueado";
-    //             break;
-    //     };
 
 
+    //esto esta sin terminar
+    public function TraerPedidoPendiente($request, $response, $args)
+    {
+
+        $header = $request->getHeaderLine('Authorization');
+        $token = trim(explode("Bearer", $header)[1]);
+
+        $payload = AutentificadorJWT::ObtenerData($token);
+
+
+        switch ($payload->empleo) {
+            case "Socio":
+                $todosLosPedidos = Pedido::TraerPendientes("Socio");
+                break;
+            case "Mozo":
+                $todosLosPedidos = Pedido::TraerPendientes("Mozo");
+                break;
+            case "Bartender":
+                $todosLosPedidos = Pedido::TraerPendientes("Bartender");
+                break;
+            case "Cervezero":
+                $todosLosPedidos = Pedido::TraerPendientes("Cervezero");
+                break;
+            case "Cocinero":
+                $todosLosPedidos = Pedido::TraerPendientes("Cocinero");
+                break;
+            default:
+                echo "ERROR, el usuario no es de los esperados.";
+                break;
+        }
+
+        $newResponse = $response->withJson($todosLosPedidos, 200);
+
+        return $newResponse;
+    }
 }
