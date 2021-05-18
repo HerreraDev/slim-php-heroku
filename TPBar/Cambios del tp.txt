@@ -1,7 +1,2 @@
-NombreDelCliente cambiarlo por id de usuario.
-
-Hacer una tabla para audiotaria o sea logs.
-
-Cambiar el estado por ids de estado.
-
-Cambiar de donde sale el dato de empleo a la hora de ver los pendientes.
+Preguntar:
+-Cambiar de donde sale el dato de empleo a la hora de ver los pendientes.

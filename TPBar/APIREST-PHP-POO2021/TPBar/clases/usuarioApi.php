@@ -1,5 +1,6 @@
 <?php
 require_once './clases/usuario.php';
+require_once './Logs/Logs.php';
 require_once './clases/IApiUsable.php';
 require_once './clases autenticacion/AutentificadorJWT.php';
 
@@ -32,10 +33,8 @@ class usuarioApi extends Usuario implements IApiUsable
     $empleo = $ArrayDeParametros['empleo'];
     $fecha_de_ingreso = date("Y-m-d");
 
-    $empleo = strtolower($empleo);
-
-    if ($empleo != "Bartender" && $empleo != "Cervecero" && $empleo != "Cocinero" && $empleo != "Mozo" && $empleo != "Socio") {
-      $response->getBody()->write("ERROR. Solo se pueden ingresar los siguientes empleos: bartender - cervecero - cocinero - mozo - socio.");
+    if ($empleo != "Bartender" && $empleo != "Cervecero" && $empleo != "Cocinero" && $empleo != "Mozo" && $empleo != "Socio" && $empleo != "Cliente") {
+      $response->getBody()->write("ERROR. Solo se pueden ingresar los siguientes empleos: Bartender - Cervecero - Cocinero - Mozo - Socio o Cliente. ¡¡RECUERDE RESPETAR MAYUSCULAS Y MINUSCULAS!!");
       return $response;
     }
 
@@ -43,9 +42,11 @@ class usuarioApi extends Usuario implements IApiUsable
     $miUsuario->nombre = $nombre;
     $miUsuario->apellido = $apellido;
     $miUsuario->clave = $clave;
+    if($empleo == "Cliente"){
+      $miUsuario->clave = "Sin clave";
+    }
     $miUsuario->mail = $mail;
     $miUsuario->empleo = $empleo;
-
     $miUsuario->fecha_de_ingreso = $fecha_de_ingreso;
 
     $archivos = $request->getUploadedFiles();
@@ -58,9 +59,11 @@ class usuarioApi extends Usuario implements IApiUsable
     //var_dump($nombreAnterior);
     $extension = array_reverse($extension);
 
-    $archivos['foto']->moveTo($destino . $nombre . "." . $extension[0]);
+    $archivos['foto']->moveTo($destino . $mail . "." . $extension[0]);
 
-    $miUsuario->ruta_foto = $destino . $nombre . "." . $extension[0];
+    $miUsuario->ruta_foto = $destino . $mail . "." . $extension[0];
+
+    
 
 
 
@@ -92,9 +95,9 @@ class usuarioApi extends Usuario implements IApiUsable
     $objDelaRespuesta = new stdclass();
     $objDelaRespuesta->cantidad = $cantidadDeBorrados;
     if ($cantidadDeBorrados > 0) {
-      $objDelaRespuesta->resultado = "algo borro!!!";
+      $objDelaRespuesta->resultado = "Usuario dado de baja.";
     } else {
-      $objDelaRespuesta->resultado = "no Borro nada!!!";
+      $objDelaRespuesta->resultado = "No se pudo dar de baja";
     }
     $newResponse = $response->withJson($objDelaRespuesta, 200);
     return $newResponse;
@@ -151,6 +154,8 @@ class usuarioApi extends Usuario implements IApiUsable
       case 1:
         $datos = ["empleo" => $user->empleo, "mail" => $user->mail];
         echo AutentificadorJWT::CrearToken($datos);
+
+        Logs::LogUsuario($user->mail);
         break;
     };
   }

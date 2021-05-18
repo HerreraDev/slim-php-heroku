@@ -38,9 +38,8 @@ class PedidoApi extends Pedido implements IApiUsable
         $miPedido = new Pedido();
 
         $numero_pedido = Pedido::AlfanumericoRandom(5);
-        $nombre_cliente = $ArrayDeParametros['nombre_cliente'];
+        $mailCliente = $ArrayDeParametros['mailCliente'];
         $numero_mesa = $ArrayDeParametros['numero_mesa'];
-        $estado = "con cliente esperando pedido";
         $nombre_producto = $ArrayDeParametros['nombre_producto'];
         $cantidad = $ArrayDeParametros['cantidad'];
         $mail_responsable = $ArrayDeParametros['mail_responsable'];
@@ -51,6 +50,12 @@ class PedidoApi extends Pedido implements IApiUsable
         if ($idMesa == -1) {
             $response->getBody()->write("ERROR. No existe una mesa con ese numero.");
             return $response;
+        }
+
+        //obtengo el id_usuario que seria el cliente
+        $idCliente = Usuario::ObtenerIdCliete($mailCliente);
+        if($idCliente == -1){
+            echo "El cliente no estaba registrado por lo que el dato quedara en -1, es decir, con cliente sin especifiar";
         }
 
         //obtengo el id_producto
@@ -75,8 +80,8 @@ class PedidoApi extends Pedido implements IApiUsable
 
 
                 $miPedido->numero_pedido = $numero_pedido;
-                $miPedido->nombre_cliente = $nombre_cliente;
-                $miPedido->estado = $estado;
+                $miPedido->id_usuario = $idCliente;
+                $miPedido->id_estado = 3;
                 $miPedido->fecha_hora_de_ingreso = $fecha_hora_de_ingreso;
                 $miPedido->id_mesa = $idMesa;
                 $miPedido->id_responsable = $idResponsable;

@@ -10,9 +10,9 @@ class Pedido{
 
     public $idPedido;
     public $numero_pedido; //genero aleatoriamente
-    public $nombre_cliente;
+    public $id_usuario;
     public $id_mesa; //mando numero de mesa y obtengo el id
-    public $estado; //siempre inicia en abierto
+    public $id_estado; //siempre inicia en abierto
     public $id_producto; //mando el nombre y obtengo el id
     public $cantidad;
     public $id_responsable; //mando el mail y obtengo el id
@@ -28,12 +28,12 @@ class Pedido{
     public function InsertarElPedidoParametros()
 	 {
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into pedidos (numero_pedido,nombre_cliente,id_mesa,estado,id_producto, cantidad, id_responsable, precio_final, fecha_hora_de_ingreso)values(:numero_pedido,:nombre_cliente,:id_mesa,:estado,:id_producto,:cantidad, :id_responsable, :precio_final, :fecha_hora_de_ingreso)");
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into pedidos (numero_pedido,id_usuario,id_mesa,id_estado,id_producto, cantidad, id_responsable, precio_final, fecha_hora_de_ingreso)values(:numero_pedido,:id_usuario,:id_mesa,:id_estado,:id_producto,:cantidad, :id_responsable, :precio_final, :fecha_hora_de_ingreso)");
 
 		$consulta->bindValue(':numero_pedido',$this->numero_pedido, PDO::PARAM_INT);
-        $consulta->bindValue(':nombre_cliente',$this->nombre_cliente, PDO::PARAM_STR);
+        $consulta->bindValue(':id_usuario',$this->id_usuario, PDO::PARAM_INT);
         $consulta->bindValue(':id_mesa',$this->id_mesa, PDO::PARAM_INT);
-        $consulta->bindValue(':estado',$this->estado, PDO::PARAM_STR);
+        $consulta->bindValue(':id_estado',$this->id_estado, PDO::PARAM_INT);
         $consulta->bindValue(':id_producto',$this->id_producto, PDO::PARAM_INT);
         $consulta->bindValue(':cantidad',$this->cantidad, PDO::PARAM_INT);
         $consulta->bindValue(':id_responsable',$this->id_responsable, PDO::PARAM_INT);
@@ -59,19 +59,19 @@ class Pedido{
 
         switch ($empleo) {
             case "Socio":
-                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
                 break;
             case "Mozo":
-                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
                 break;
             case "Bartender":
-                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'bar' and estado = 'con cliente esperando pedido'");
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'bar' and id_estado = 3");
                 break;
             case "Cervezero":
-                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'cerveza' and estado = 'con cliente esperando pedido'");
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'cerveza' and id_estado = 3");
                 break;
             case "Cocinero":
-                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'cocina' and estado = 'con cliente esperando pedido'");
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'cocina' and id_estado = 3");
                 break;
             default:
                 echo "ERROR, el usuario no es de los esperados.";

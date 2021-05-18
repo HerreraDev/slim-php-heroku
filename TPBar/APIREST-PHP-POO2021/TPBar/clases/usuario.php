@@ -13,32 +13,22 @@ class Usuario
 	public $fecha_de_ingreso;
     public $empleo;
 	public $ruta_foto;
+	public $fecha_de_salida;
 
 
     public function BorrarUsuario()
 	{
 	    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		$consulta =$objetoAccesoDato->RetornarConsulta("
-				delete 
-				from usuario 				
+				UPDATE usuario 
+				set fecha_de_salida=:fecha_de_salida 				
 				WHERE idUsuario=:id");	
 		$consulta->bindValue(':id',$this->idUsuario, PDO::PARAM_INT);		
+		$consulta->bindValue(':fecha_de_salida',date("Y-m-d"), PDO::PARAM_STR);		
+
 		$consulta->execute();
 		return $consulta->rowCount();
 	}
-
-    // public static function BorrarUsuarioPorFechaRegistro($año)
-	//  {
-
-	// 	$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-	// 	$consulta =$objetoAccesoDato->RetornarConsulta("
-	// 		delete 
-	// 		from usuario 				
-	// 		WHERE fecha_de_ingreso=:fecha_de_ingreso");	
-	// 	$consulta->bindValue(':anio',$año, PDO::PARAM_INT);		
-	// 	$consulta->execute();
-	// 	return $consulta->rowCount();
-	//  }
 
      public function ModificarUsuario()
 	 {
@@ -250,6 +240,23 @@ class Usuario
             }
         }
 		return $idUsuario;
+	}
+
+	public static function ObtenerIdCliete($mailCliente){
+
+		$arrayUsuarios = array();
+        $arrayUsuarios = self::TraerTodoLosUsuarios();
+
+        $idCliente = -1;
+        foreach($arrayUsuarios as $usuario)
+        {
+            if($usuario->mail == $mailCliente && $usuario->empleo == "Cliente")
+            {
+                $idCliente = $usuario->idUsuario;
+				break;
+            }
+        }
+		return $idCliente;
 	}
 }
    
