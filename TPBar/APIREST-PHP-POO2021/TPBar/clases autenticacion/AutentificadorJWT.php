@@ -19,7 +19,7 @@ class AutentificadorJWT
         */
         $payload = array(
         	'iat'=>$ahora,
-            'exp' => $ahora + (60*4),
+            'exp' => $ahora + (60*60),
             'aud' => self::Aud(),
             'data' => $datos,
             'app'=> "TPBAR 2021"

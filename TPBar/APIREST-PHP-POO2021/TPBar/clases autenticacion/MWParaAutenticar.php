@@ -14,7 +14,10 @@ class MWParaAutenticar
 
 
       $response = $next($request, $response);
-    } else {
+    } else if($request->isPut()){
+      $response = $next($request, $response);
+    }
+    else {
 
       $header = $request->getHeaderLine('Authorization');
       $token = trim(explode("Bearer", $header)[1]);

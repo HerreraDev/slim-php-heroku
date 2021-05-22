@@ -51,6 +51,24 @@ class Pedido{
         return $consulta->fetchAll(PDO::FETCH_CLASS, "Pedido");		
      }
 
+     public static function TomarPedido($idPedido, $estado, $tiempo, $idResponsable){
+
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("
+				UPDATE pedidos
+				set id_estado=:estado,
+                id_responsable=:idResponsable,
+                tiempo_estimado=:tiempo_estimado
+				WHERE idPedido=:id");	
+		$consulta->bindValue(':id',$idPedido, PDO::PARAM_INT);	$consulta->bindValue(':estado',$estado, PDO::PARAM_INT);		
+        $consulta->bindValue(':idResponsable',$idResponsable, PDO::PARAM_INT);
+        $consulta->bindValue(':tiempo_estimado',$tiempo, PDO::PARAM_INT);
+
+
+		$consulta->execute();
+		return $consulta->rowCount();
+     }
+
 
      public static function TraerPendientes($empleo){
 
@@ -59,10 +77,10 @@ class Pedido{
 
         switch ($empleo) {
             case "Socio":
-                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad, tiempo_estimado FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
                 break;
             case "Mozo":
-                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
+                $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad, tiempo_estimado FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto");
                 break;
             case "Bartender":
                 $consulta = $objetoAccesoDato->RetornarConsulta("SELECT idPedido, nombre, id_estado, cantidad FROM `pedidos` INNER JOIN producto ON pedidos.id_producto = producto.idProducto WHERE producto.tipo = 'bar' and id_estado = 3");

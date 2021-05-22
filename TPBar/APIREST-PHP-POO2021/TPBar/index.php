@@ -80,7 +80,7 @@ $app->group('/pedido', function () {
   
   $this->delete('/{id}', \PedidoApi::class . ':BorrarUno');
   
-  $this->put('/', \PedidoApi::class . ':ModificarUno');
+  $this->put('/tomar', \PedidoApi::class . ':TomarPedidoPendiente');
 
 
   
@@ -95,6 +95,7 @@ $app->group('/pendientes', function(){
   
 
 })->add(\MWParaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
 
 
 

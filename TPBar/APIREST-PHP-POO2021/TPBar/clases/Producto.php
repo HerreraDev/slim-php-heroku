@@ -11,6 +11,7 @@ class Producto{
     public $precio;
     public $fecha_de_creacion;
     public $fecha_de_modificacion;
+	public $ruta_foto;
 
     public function BorrarProducto()
 	{
@@ -33,7 +34,8 @@ class Producto{
 				tipo=:tipo,
 				stock=:stock,
                 precio=:precio,
-                fecha_de_modificacion=:fecha_de_modificacion
+                fecha_de_modificacion=:fecha_de_modificacion,
+				ruta_foto=:ruta_foto
 				WHERE codigo_de_barra=:codigo_de_barra");
         
                 
@@ -43,13 +45,15 @@ class Producto{
         $consulta->bindValue(':stock',$this->stock, PDO::PARAM_INT);
         $consulta->bindValue(':precio',$this->precio, PDO::PARAM_INT);
         $consulta->bindValue(':fecha_de_modificacion',$this->fecha_de_modificacion, PDO::PARAM_STR);
+		$consulta->bindValue(':ruta_foto',$this->ruta_foto, PDO::PARAM_STR);
+
 		return $consulta->execute();
 	}
 
      public function InsertarElProductoParametros()
 	 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta = $objetoAccesoDato->RetornarConsulta("INSERT into producto (codigo_de_barra,nombre,tipo,stock,precio,fecha_de_creacion,fecha_de_modificacion)values(:codigo_de_barra,:nombre,:tipo,:stock,:precio,:fecha_de_creacion,:fecha_de_modificacion)");
+			$consulta = $objetoAccesoDato->RetornarConsulta("INSERT into producto (codigo_de_barra,nombre,tipo,stock,precio,fecha_de_creacion,fecha_de_modificacion,ruta_foto)values(:codigo_de_barra,:nombre,:tipo,:stock,:precio,:fecha_de_creacion,:fecha_de_modificacion,:ruta_foto)");
 
 			$consulta->bindValue(':codigo_de_barra',$this->codigo_de_barra, PDO::PARAM_INT);
 			$consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
@@ -58,6 +62,7 @@ class Producto{
             $consulta->bindValue(':precio',$this->precio, PDO::PARAM_INT);
             $consulta->bindValue(':fecha_de_creacion',$this->fecha_de_creacion, PDO::PARAM_STR);
             $consulta->bindValue(':fecha_de_modificacion',$this->fecha_de_modificacion, PDO::PARAM_STR);
+			$consulta->bindValue(':ruta_foto',$this->ruta_foto, PDO::PARAM_STR);
 
 			$consulta->execute();
 			return $objetoAccesoDato->RetornarUltimoIdInsertado();
@@ -100,7 +105,7 @@ class Producto{
 
 	public function mostrarDatos()
 	{
-        return "Datos: ".$this->codigo_de_barra." ".$this->nombre."  ".$this->tipo." ".$this->stock." ".$this->precio." ".$this->fecha_de_creacion." ".$this->fecha_de_modificacion;
+        return "Datos: ".$this->codigo_de_barra." ".$this->nombre."  ".$this->tipo." ".$this->stock." ".$this->precio." ".$this->fecha_de_creacion." ".$this->fecha_de_modificacion." ".$this->ruta_foto;
 	}
 
 

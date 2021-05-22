@@ -48,6 +48,19 @@ class ProductoApi extends Producto implements IApiUsable
         $miProducto->fecha_de_creacion=$fecha_de_creacion;
         $miProducto->fecha_de_modificacion=$fecha_de_modificacion;
 
+
+
+        $archivos = $request->getUploadedFiles();
+        $destino="./fotos/productos/";
+
+        $nombreAnterior=$archivos['foto']->getClientFilename();
+        $extension= explode(".", $nombreAnterior)  ;
+        $extension=array_reverse($extension);
+
+        $archivos['foto']->moveTo($destino.$codigo_de_barra.".".$extension[0]);
+
+        $miProducto->ruta_foto = $destino . $codigo_de_barra . "." . $extension[0];
+
         if(Producto::VerificarProductoDB($miProducto))
         {
           $miProducto->ModificarProductoParametros();
@@ -60,18 +73,8 @@ class ProductoApi extends Producto implements IApiUsable
         }
 
 
-        /*$archivos = $request->getUploadedFiles();
-        $destino="./fotos/productos/";
-        //var_dump($archivos);
-        //var_dump($archivos['foto']);
-
-        $nombreAnterior=$archivos['foto']->getClientFilename();
-        $extension= explode(".", $nombreAnterior)  ;
-        //var_dump($nombreAnterior);
-        $extension=array_reverse($extension);
-
-        $archivos['foto']->moveTo($destino.$nombre.".".$extension[0]);
-        */
+     
+        
 
         return $response;
     }

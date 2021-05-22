@@ -54,7 +54,7 @@ class PedidoApi extends Pedido implements IApiUsable
 
         //obtengo el id_usuario que seria el cliente
         $idCliente = Usuario::ObtenerIdCliete($mailCliente);
-        if($idCliente == -1){
+        if ($idCliente == -1) {
             echo "El cliente no estaba registrado por lo que el dato quedara en -1, es decir, con cliente sin especifiar";
         }
 
@@ -148,32 +148,10 @@ class PedidoApi extends Pedido implements IApiUsable
 
     public function ModificarUno($request, $response, $args)
     {
-        /*
-     	//$response->getBody()->write("<h1>Modificar  uno</h1>");
-     	$ArrayDeParametros = $request->getParsedBody();
-	    //var_dump($ArrayDeParametros);
-        
-        $id= $ArrayDeParametros['id'];
-        $nombre= $ArrayDeParametros['nombre'];
-        $apellido= $ArrayDeParametros['apellido'];
-        $clave= $ArrayDeParametros['clave'];
-        $mail= $ArrayDeParametros['mail'];
-        $empleo= $ArrayDeParametros['empleo'];
-        
-	    $miPedido = new Pedido();
-        $miPedido->idPedido = $id;
-        $miPedido->nombre=$nombre;
-        $miPedido->apellido=$apellido;
-        $miPedido->clave=$clave;
-        $miPedido->mail=$mail;
-        $miPedido->empleo=$empleo;
 
-	   	$resultado =$miPedido->ModificarPedidoParametros();
-	   	$objDelaRespuesta= new stdclass();
-		//var_dump($resultado);
-		$objDelaRespuesta->resultado=$resultado;
-		return $response->withJson($objDelaRespuesta, 200);
-        */
+
+
+        
     }
 
 
@@ -212,5 +190,34 @@ class PedidoApi extends Pedido implements IApiUsable
         $newResponse = $response->withJson($todosLosPedidos, 200);
 
         return $newResponse;
+    }
+
+    public function TomarPedidoPendiente($request, $response, $args){
+        $ArrayDeParametros = $request->getParsedBody();
+
+        $idPedido = $ArrayDeParametros['idPedido'];
+        $estado = $ArrayDeParametros['estado'];
+        $tiempo_estimado = $ArrayDeParametros['tiempo_estimado'];
+
+        $header = $request->getHeaderLine('Authorization');
+        $token = trim(explode("Bearer", $header)[1]);
+
+        $payload = AutentificadorJWT::ObtenerData($token);
+
+        //obtengo el id_responsable
+        $idResponsable = Usuario::ObtenerIdPorMail($payload->mail);
+        if ($idResponsable == -1) {
+            $response->getBody()->write("ERROR. No existe un usuario con ese mail.");
+            return $response;
+        }
+        else
+        {
+            $resultado = Pedido::TomarPedido($idPedido, $estado, $tiempo_estimado, $idResponsable);
+
+            $objDelaRespuesta = new stdclass();
+            //var_dump($resultado);
+            $objDelaRespuesta->resultado = $resultado;
+            return $response->getBody()->write("Se tomo el pedido.");
+        }
     }
 }
