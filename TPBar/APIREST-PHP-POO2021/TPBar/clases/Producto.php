@@ -17,10 +17,11 @@ class Producto{
 	{
 	    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		$consulta =$objetoAccesoDato->RetornarConsulta("
-				delete 
-				from producto				
+				update producto 
+				set stock=:stock		
 				WHERE idProducto=:id");	
 		$consulta->bindValue(':id',$this->idProducto, PDO::PARAM_INT);
+		$consulta->bindValue(':stock',-1, PDO::PARAM_INT);
 		$consulta->execute();
 		return $consulta->rowCount();
 	}

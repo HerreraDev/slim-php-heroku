@@ -4,6 +4,7 @@ require_once './clases/Pedido.php';
 require_once './clases/Mesa.php';
 require_once './clases/usuario.php';
 require_once './clases/Producto.php';
+require_once './Logs/Logs.php';
 
 
 
@@ -193,15 +194,13 @@ class PedidoApi extends Pedido implements IApiUsable
     }
 
     public function TomarPedidoPendiente($request, $response, $args){
+
+        //datos del pedido
         $ArrayDeParametros = $request->getParsedBody();
-
         $idPedido = $ArrayDeParametros['idPedido'];
-        $estado = $ArrayDeParametros['estado'];
         $tiempo_estimado = $ArrayDeParametros['tiempo_estimado'];
-
         $header = $request->getHeaderLine('Authorization');
         $token = trim(explode("Bearer", $header)[1]);
-
         $payload = AutentificadorJWT::ObtenerData($token);
 
         //obtengo el id_responsable
@@ -212,12 +211,42 @@ class PedidoApi extends Pedido implements IApiUsable
         }
         else
         {
-            $resultado = Pedido::TomarPedido($idPedido, $estado, $tiempo_estimado, $idResponsable);
+            $resultado = Pedido::TomarPedido($idPedido, $tiempo_estimado, $idResponsable);
+
+            Logs::logPedido($idPedido);
 
             $objDelaRespuesta = new stdclass();
             //var_dump($resultado);
             $objDelaRespuesta->resultado = $resultado;
-            return $response->getBody()->write("Se tomo el pedido.");
+            return $response->getBody()->write("Se tomo el pedido.Recuerde que si estaba en preparacion se paso a listo para servir.");
+        }
+    }
+
+    public function ServirPedidoListo($request, $response, $args)
+    {
+        $ArrayDeParametros = $request->getParsedBody();
+        $idPedido = $ArrayDeParametros['idPedido'];
+
+        $header = $request->getHeaderLine('Authorization');
+        $token = trim(explode("Bearer", $header)[1]);
+        $payload = AutentificadorJWT::ObtenerData($token);
+
+        //obtengo el id_responsable
+        $idResponsable = Usuario::ObtenerIdPorMail($payload->mail);
+        if ($idResponsable == -1) {
+            $response->getBody()->write("ERROR. No existe un usuario con ese mail.");
+            return $response;
+        }
+        else
+        {
+            $resultado = Pedido::ServirPedido($idPedido,$idResponsable);
+
+            Logs::logPedido($idPedido);
+
+            $objDelaRespuesta = new stdclass();
+            //var_dump($resultado);
+            $objDelaRespuesta->resultado = $resultado;
+            return $response->getBody()->write("Se sirvio el pedido.");
         }
     }
 }

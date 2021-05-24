@@ -2,7 +2,6 @@ Preguntar:
 -Cambiar de donde sale el dato de empleo a la hora de ver los pendientes.
 
 Pendientes:
-
 -Poder tomar foto de los pedidos
 -Poder poner codigo de pedido y codigo de mesa para ver el tiempo estimado
 
@@ -11,3 +10,4 @@ Listos:
 -Fotos de los productos
 -Poder agregar tiempo estimado al pedido
 -Poder tomar los pedidos
+-Mozo tiene que ver pedidos con id 2 que son los "Listos para servir", elije uno de esos y ahi se actualiza el pedido a "Servido" y la mesa a "con cliente comiendo.
