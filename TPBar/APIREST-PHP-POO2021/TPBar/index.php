@@ -17,9 +17,35 @@ require_once './clases autenticacion/MWParaAutenticar.php';
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
-
-
 $app = new \Slim\App(["settings" => $config]);
+
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+//Eloquent
+$container=$app->getContainer();
+
+//mysql:host=remotemysql.com;dbname=0qs1bpp6xL;charset=utf8', '0qs1bpp6xL', 'Gl4Mlm6HbD',
+
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => 'remotemysql.com',
+    'database'  => '0qs1bpp6xL',
+    'username'  => '0qs1bpp6xL',
+    'password'  => 'Gl4Mlm6HbD',
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => '',
+]);
+
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+///////////////////////
+
+
+
+
 
 /*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
 
@@ -91,11 +117,18 @@ $app->group('/pendientes', function(){
 
   $this->get('/', \PedidoApi::class . ':TraerPedidoPendiente');
 
-  
-
 })->add(\MWParaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
+$app->group('/cliente', function(){
 
+  $this->get('/{numero_pedido}', \PedidoApi::class . ':ConsultarTiempoEspera');
+
+  $this->post('/pagar', \PedidoApi::class . ':PagarCuenta');
+
+  $this->post('/puntuar', \PedidoApi::class . ':PuntuarAtencion');
+
+
+});
 
 
 

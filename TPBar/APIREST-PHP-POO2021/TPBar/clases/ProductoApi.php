@@ -1,17 +1,21 @@
 <?php
-require_once './clases/Producto.php';
+require_once './models/Producto.php';
 require_once './clases/IApiUsable.php';
 
-class ProductoApi extends Producto implements IApiUsable
+use App\Models\Producto as Producto;
+
+
+class ProductoApi implements IApiUsable
 {
  	public function TraerUno($request, $response, $args) {
-     	$id=$args['id'];
-    	$elProducto=Producto::TraerUnProducto($id);
-     	$newResponse = $response->withJson($elProducto, 200);  
-    	return $newResponse;
+    $id = $args['id'];
+    $elProducto = new Producto;
+    $elProducto = $elProducto->find($id);
+    $newResponse = $response->withJson($elProducto, 200);
+    return $newResponse;
     }
      public function TraerTodos($request, $response, $args) {
-      	$todosLosProductos=Producto::TraerTodoLosProductos();
+      	$todosLosProductos=Producto::all();
 
         //Producto::DibujarTablaProducto($todosLosProductos);
 
@@ -61,14 +65,13 @@ class ProductoApi extends Producto implements IApiUsable
 
         $miProducto->ruta_foto = $destino . $codigo_de_barra . "." . $extension[0];
 
-        if(Producto::VerificarProductoDB($miProducto))
+        if(auxProducto::VerificarProductoDB($miProducto))
         {
-          $miProducto->ModificarProductoParametros();
-          $response->getBody()->write("ADVERTENCIA. Como el producto ya existia, se actualizaron sus datos");
+          $response->getBody()->write("ERROR. Como el producto ya existia, no se pudo cargar");
         }
         else
         {
-          $miProducto->InsertarElProductoParametros();
+          $miProducto->save();
           $response->getBody()->write("Se ingreso el Producto nuevo");
         }
 
@@ -81,23 +84,13 @@ class ProductoApi extends Producto implements IApiUsable
 
     
     public function BorrarUno($request, $response, $args) {
-        $id=$args['id'];
-        $Producto= new Producto();
-        $Producto->idProducto=$id;
-        $cantidadDeBorrados=$Producto->BorrarProducto();
-
-        $objDelaRespuesta= new stdclass();
-       $objDelaRespuesta->cantidad=$cantidadDeBorrados;
-       if($cantidadDeBorrados>0)
-           {
-                $objDelaRespuesta->resultado="algo borro!!!";
-           }
-           else
-           {
-               $objDelaRespuesta->resultado="no Borro nada!!!";
-           }
-       $newResponse = $response->withJson($objDelaRespuesta, 200);  
-         return $newResponse;
+      $id = $args['id'];
+      $producto = new Producto();
+      $producto->find($id)->delete();
+  
+  
+      $response->getBody()->write("Se elimino el producto con exito");
+      return $response;
    }
      
      public function ModificarUno($request, $response, $args) {
@@ -105,6 +98,7 @@ class ProductoApi extends Producto implements IApiUsable
      	$ArrayDeParametros = $request->getParsedBody();
 	    //var_dump($ArrayDeParametros);
         
+        $id= $ArrayDeParametros['id'];
         $nombre= $ArrayDeParametros['nombre'];
         $tipo= $ArrayDeParametros['tipo'];
         $stock= $ArrayDeParametros['stock'];
@@ -113,17 +107,17 @@ class ProductoApi extends Producto implements IApiUsable
 
         
 	    $miProducto = new Producto();
-        $miProducto->nombre=$nombre;
-        $miProducto->tipo=$tipo;
-        $miProducto->stock=$stock;
-        $miProducto->precio=$precio;
-        $miProducto->fecha_de_modificacion=$fecha_de_modificacion;
 
-	   	$resultado =$miProducto->ModificarProductoParametros();
-	   	$objDelaRespuesta= new stdclass();
-		//var_dump($resultado);
-		$objDelaRespuesta->resultado=$resultado;
-		return $response->withJson($objDelaRespuesta, 200);		
+      $elPrdoModif = $miProducto->find($id);
+        $elPrdoModif->nombre=$nombre;
+        $elPrdoModif->tipo=$tipo;
+        $elPrdoModif->stock=$stock;
+        $elPrdoModif->precio=$precio;
+        $elPrdoModif->fecha_de_modificacion=$fecha_de_modificacion;
+
+	   	$resultado =$elPrdoModif->save();
+
+		return $response->withJson($resultado, 200);		
   }
 
 

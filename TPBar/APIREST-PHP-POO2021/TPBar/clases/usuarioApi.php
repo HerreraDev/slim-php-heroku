@@ -1,26 +1,30 @@
 <?php
-require_once './clases/usuario.php';
+require_once './models/Usuario.php';
+require_once './auxEntidades/auxUsuario.php';
 require_once './Logs/Logs.php';
 require_once './clases/IApiUsable.php';
 require_once './clases autenticacion/AutentificadorJWT.php';
 
-class usuarioApi extends Usuario implements IApiUsable
+use App\Models\Usuario as Usuario;
+
+class usuarioApi implements IApiUsable
 {
   public function TraerUno($request, $response, $args)
   {
     $id = $args['id'];
-    $elUsuario = Usuario::TraerUnUsuario($id);
+    $elUsuario = new Usuario;
+    $elUsuario = $elUsuario->find($id);
     $newResponse = $response->withJson($elUsuario, 200);
     return $newResponse;
   }
   public function TraerTodos($request, $response, $args)
   {
-    $todosLosUsuarios = Usuario::TraerTodoLosUsuarios();
+    $lista = Usuario::all();
+    $payload = json_encode(array("listaUsuario" => $lista));
 
-    //Usuario::DibujarTablaUsuario($todosLosUsuarios);
-
-    $newResponse = $response->withJson($todosLosUsuarios, 200);
-    return $newResponse;
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
   }
   public function CargarUno($request, $response, $args)
   {
@@ -67,10 +71,10 @@ class usuarioApi extends Usuario implements IApiUsable
 
 
 
-    if (Usuario::VerificarUsuarioDB($miUsuario) == 0 || Usuario::VerificarUsuarioDB($miUsuario) == 1) {
+    if (auxUsuario::VerificarUsuarioDB($miUsuario) == 0 || auxUsuario::VerificarUsuarioDB($miUsuario) == 1) {
       $response->getBody()->write("ERROR. Ya existe un usuario registrado con ese mail, ingrese otro.");
     } else {
-      $miUsuario->InsertarElUsuarioParametros();
+      $miUsuario->save();
       $response->getBody()->write("Se registro el usuario con exito");
     }
 
@@ -89,18 +93,11 @@ class usuarioApi extends Usuario implements IApiUsable
   {
     $id = $args['id'];
     $usuario = new Usuario();
-    $usuario->idUsuario = $id;
-    $cantidadDeBorrados = $usuario->BorrarUsuario();
+    $usuario->find($id)->delete();
 
-    $objDelaRespuesta = new stdclass();
-    $objDelaRespuesta->cantidad = $cantidadDeBorrados;
-    if ($cantidadDeBorrados > 0) {
-      $objDelaRespuesta->resultado = "Usuario dado de baja.";
-    } else {
-      $objDelaRespuesta->resultado = "No se pudo dar de baja";
-    }
-    $newResponse = $response->withJson($objDelaRespuesta, 200);
-    return $newResponse;
+
+    $response->getBody()->write("Se elimino el usuario con exito");
+    return $response;
   }
 
   public function ModificarUno($request, $response, $args)
@@ -117,18 +114,19 @@ class usuarioApi extends Usuario implements IApiUsable
     $empleo = $ArrayDeParametros['empleo'];
 
     $miUsuario = new Usuario();
-    $miUsuario->idUsuario = $id;
-    $miUsuario->nombre = $nombre;
-    $miUsuario->apellido = $apellido;
-    $miUsuario->clave = $clave;
-    $miUsuario->mail = $mail;
-    $miUsuario->empleo = $empleo;
 
-    $resultado = $miUsuario->ModificarUsuarioParametros();
-    $objDelaRespuesta = new stdclass();
-    //var_dump($resultado);
-    $objDelaRespuesta->resultado = $resultado;
-    return $response->withJson($objDelaRespuesta, 200);
+    $elUserModif = $miUsuario->find($id);
+
+    $elUserModif->idUsuario = $id;
+    $elUserModif->nombre = $nombre;
+    $elUserModif->apellido = $apellido;
+    $elUserModif->clave = $clave;
+    $elUserModif->mail = $mail;
+    $elUserModif->empleo = $empleo;
+
+    $elUserModif->save();
+
+    return $response->withJson($elUserModif, 200);
   }
 
   public function LoginUsuario($request, $response, $args)
@@ -142,7 +140,7 @@ class usuarioApi extends Usuario implements IApiUsable
     $user->mail = $mail;
     $user->clave = $clave;
 
-    $respuesta = Usuario::VerificarUsuarioDB($user);
+    $respuesta = auxUsuario::VerificarUsuarioDB($user);
 
     switch ($respuesta) {
       case -1:
@@ -155,7 +153,7 @@ class usuarioApi extends Usuario implements IApiUsable
         $datos = ["empleo" => $user->empleo, "mail" => $user->mail];
         echo AutentificadorJWT::CrearToken($datos);
 
-        Logs::LogUsuario($user->mail);
+        Logs::LogUsuario($user->mail, "Login");
         break;
     };
   }

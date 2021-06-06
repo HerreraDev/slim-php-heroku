@@ -1,29 +1,39 @@
 <?php
 
-require_once './clases/Pedido.php';
-require_once './clases/Mesa.php';
-require_once './clases/usuario.php';
-require_once './clases/Producto.php';
+require_once './auxEntidades/auxPedido.php';
+require_once './auxEntidades/auxProducto.php';
+require_once './auxEntidades/auxMesa.php';
+
+
+require_once './models/Mesa.php';
+require_once './models/Pedido.php';
+require_once './models/Producto.php';
+require_once './models/Usuario.php';
+
 require_once './Logs/Logs.php';
 
 
 
 require_once './clases/IApiUsable.php';
 
-class PedidoApi extends Pedido implements IApiUsable
+use App\Models\Pedido as Pedido;
+use App\Models\Mesa as Mesa;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+
+class PedidoApi implements IApiUsable
 {
     public function TraerUno($request, $response, $args)
     {
-        /*$id=$args['id'];
-    	$elPedido=Pedido::TraerUnPedido($id);
-     	$newResponse = $response->withJson($elPedido, 200);
-         
+        $id = $args['id'];
+        $elPedido = new Pedido;
+        $elPedido = $elPedido->find($id);
+        $newResponse = $response->withJson($elPedido, 200);
         return $newResponse;
-        */
     }
     public function TraerTodos($request, $response, $args)
     {
-        $todosLosPedidos = Pedido::TraerTodoLosPedidos();
+        $todosLosPedidos = Pedido::all();
 
         //Pedido::DibujarTablaPedido($todosLosPedidos);
 
@@ -38,7 +48,7 @@ class PedidoApi extends Pedido implements IApiUsable
 
         $miPedido = new Pedido();
 
-        $numero_pedido = Pedido::AlfanumericoRandom(5);
+        $numero_pedido = auxPedido::AlfanumericoRandom(5);
         $mailCliente = $ArrayDeParametros['mailCliente'];
         $numero_mesa = $ArrayDeParametros['numero_mesa'];
         $nombre_producto = $ArrayDeParametros['nombre_producto'];
@@ -47,14 +57,14 @@ class PedidoApi extends Pedido implements IApiUsable
         $fecha_hora_de_ingreso = date("Y-m-d H:i:s");
 
         //obtengo el id_mesa
-        $idMesa = Mesa::ObtenerIdPorNumeroMesa($numero_mesa);
+        $idMesa = auxMesa::ObtenerIdPorNumeroMesa($numero_mesa);
         if ($idMesa == -1) {
-            $response->getBody()->write("ERROR. No existe una mesa con ese numero.");
+            $response->getBody()->write("ERROR. No existe una mesa con ese numero o la mesa esta en uso.");
             return $response;
         }
 
         //obtengo el id_usuario que seria el cliente
-        $idCliente = Usuario::ObtenerIdCliete($mailCliente);
+        $idCliente = auxUsuario::ObtenerIdCliete($mailCliente);
         if ($idCliente == -1) {
             echo "El cliente no estaba registrado por lo que el dato quedara en -1, es decir, con cliente sin especifiar";
         }
@@ -64,14 +74,14 @@ class PedidoApi extends Pedido implements IApiUsable
         $cantidades = explode("/", $cantidad);
         for ($i = 0; $i < count($productos); $i++) {
 
-            $idProducto = Producto::ObtenerIdProductoPorNombre($productos[$i]);
+            $idProducto = auxProducto::ObtenerIdProductoPorNombre($productos[$i]);
             if ($idProducto == -1) {
                 $response->getBody()->write("ERROR. No existe un producto con el nombre: " . $productos[$i]);
                 return $response;
             } else {
 
                 //obtengo el id_responsable
-                $idResponsable = Usuario::ObtenerIdPorMail($mail_responsable);
+                $idResponsable = auxUsuario::ObtenerIdPorMail($mail_responsable);
                 if ($idResponsable == -1) {
                     $response->getBody()->write("ERROR. No existe un usuario con ese mail.");
                     return $response;
@@ -82,21 +92,32 @@ class PedidoApi extends Pedido implements IApiUsable
 
                 $miPedido->numero_pedido = $numero_pedido;
                 $miPedido->id_usuario = $idCliente;
-                $miPedido->id_estado = 3;
+                $miPedido->id_estado = 0;
                 $miPedido->fecha_hora_de_ingreso = $fecha_hora_de_ingreso;
                 $miPedido->id_mesa = $idMesa;
                 $miPedido->id_responsable = $idResponsable;
+                $miPedido->tiempo_estimado = 0;
 
 
                 $miPedido->cantidad = $cantidades[$i];
                 $miPedido->id_producto = $idProducto;
-                $miPedido->precio_final = Producto::CalcularPrecioFinal($miPedido);
+                $miPedido->precio_final = auxProducto::CalcularPrecioFinal($miPedido);
 
-                $miPedido->InsertarElPedidoParametros();
+                $miPedido->save();
+
+
 
                 $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i]);
             }
         }
+
+        //Actualizo estado de la mesa
+        $auxMesa = new Mesa();
+        $MesaAct = $auxMesa->find($idMesa);
+        $MesaAct->id_estado = 3;
+        $MesaAct->save();
+
+
 
 
 
@@ -149,10 +170,6 @@ class PedidoApi extends Pedido implements IApiUsable
 
     public function ModificarUno($request, $response, $args)
     {
-
-
-
-        
     }
 
 
@@ -169,19 +186,19 @@ class PedidoApi extends Pedido implements IApiUsable
 
         switch ($payload->empleo) {
             case "Socio":
-                $todosLosPedidos = Pedido::TraerPendientes("Socio");
+                $todosLosPedidos = auxPedido::TraerPendientes("Socio");
                 break;
             case "Mozo":
-                $todosLosPedidos = Pedido::TraerPendientes("Mozo");
+                $todosLosPedidos = auxPedido::TraerPendientes("Mozo");
                 break;
             case "Bartender":
-                $todosLosPedidos = Pedido::TraerPendientes("Bartender");
+                $todosLosPedidos = auxPedido::TraerPendientes("Bartender");
                 break;
             case "Cervezero":
-                $todosLosPedidos = Pedido::TraerPendientes("Cervezero");
+                $todosLosPedidos = auxPedido::TraerPendientes("Cervezero");
                 break;
             case "Cocinero":
-                $todosLosPedidos = Pedido::TraerPendientes("Cocinero");
+                $todosLosPedidos = auxPedido::TraerPendientes("Cocinero");
                 break;
             default:
                 echo "ERROR, el usuario no es de los esperados.";
@@ -193,7 +210,8 @@ class PedidoApi extends Pedido implements IApiUsable
         return $newResponse;
     }
 
-    public function TomarPedidoPendiente($request, $response, $args){
+    public function TomarPedidoPendiente($request, $response, $args)
+    {
 
         //datos del pedido
         $ArrayDeParametros = $request->getParsedBody();
@@ -204,16 +222,16 @@ class PedidoApi extends Pedido implements IApiUsable
         $payload = AutentificadorJWT::ObtenerData($token);
 
         //obtengo el id_responsable
-        $idResponsable = Usuario::ObtenerIdPorMail($payload->mail);
+        $idResponsable = auxUsuario::ObtenerIdPorMail($payload->mail);
         if ($idResponsable == -1) {
             $response->getBody()->write("ERROR. No existe un usuario con ese mail.");
             return $response;
-        }
-        else
-        {
-            $resultado = Pedido::TomarPedido($idPedido, $tiempo_estimado, $idResponsable);
+        } else {
+            $resultado = auxPedido::TomarPedido($idPedido, $tiempo_estimado, $idResponsable);
 
             Logs::logPedido($idPedido);
+            Logs::LogUsuario($payload->mail, "Tomo pedido");
+
 
             $objDelaRespuesta = new stdclass();
             //var_dump($resultado);
@@ -232,21 +250,49 @@ class PedidoApi extends Pedido implements IApiUsable
         $payload = AutentificadorJWT::ObtenerData($token);
 
         //obtengo el id_responsable
-        $idResponsable = Usuario::ObtenerIdPorMail($payload->mail);
+        $idResponsable = auxUsuario::ObtenerIdPorMail($payload->mail);
         if ($idResponsable == -1) {
             $response->getBody()->write("ERROR. No existe un usuario con ese mail.");
             return $response;
-        }
-        else
-        {
-            $resultado = Pedido::ServirPedido($idPedido,$idResponsable);
+        } else {
+            $resultado = auxPedido::ServirPedido($idPedido, $idResponsable);
 
             Logs::logPedido($idPedido);
+            Logs::LogUsuario($payload->mail, "Sirvio pedido");
+
+
 
             $objDelaRespuesta = new stdclass();
             //var_dump($resultado);
             $objDelaRespuesta->resultado = $resultado;
             return $response->getBody()->write("Se sirvio el pedido.");
         }
+    }
+
+    public function ConsultarTiempoEspera($request, $response, $args){
+        $id = $args['numero_pedido'];
+
+        $pedidoMax = Capsule::table('pedidos')->where('numero_pedido', $id) ->max("tiempo_estimado");
+
+        echo "Tiempo estimado para entrega: ",$pedidoMax, " minutos."; 
+    } 
+
+    public function PagarCuenta($request, $response, $args){
+
+        $ArrayDeParametros = $request->getParsedBody();
+
+        $numero_pedido = $ArrayDeParametros["numero_pedido"];
+        $metodoPago = $ArrayDeParametros["metodoPago"];
+        if(auxPedido::OperacionCobro($numero_pedido,$metodoPago))
+        {
+            echo "Pago realizado con exito!!";
+        }
+        else
+        {
+            echo "Algo fallo";
+        }
+
+
+
     }
 }

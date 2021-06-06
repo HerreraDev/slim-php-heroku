@@ -1,25 +1,30 @@
 <?php
 
-include_once "./clases/usuario.php";
-include_once "./clases/Pedido.php";
+include_once "./models/Usuario.php";
+require_once './auxEntidades/auxUsuario.php';
+require_once './auxEntidades/auxPedido.php';
 
+include_once "./models/Pedido.php";
+
+use App\Models\Pedido as Pedido;
 
 class Logs
 {
 
-    public static function LogUsuario($mail)
+    public static function LogUsuario($mail,$accion)
     {
 
-        $idResponsable = Usuario::ObtenerIdPorMail($mail);
+        $idResponsable = auxUsuario::ObtenerIdPorMail($mail);
         if ($idResponsable != -1) {
 
             $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta = $objetoAccesoDato->RetornarConsulta("INSERT INTO `userLogs`(`id_usuario`, `hora_inicio_sesion`) VALUES (:id_usuario,:hora_inicio_sesion)");
+			$consulta = $objetoAccesoDato->RetornarConsulta("INSERT INTO `userLogs`(`id_usuario`, `accion`, `hora_accion`) VALUES (:id_usuario,:accion,:hora_accion)");
 
             $consulta->bindValue(':id_usuario',$idResponsable, PDO::PARAM_INT);
-            $consulta->bindValue(':hora_inicio_sesion',date("Y-m-d H:i:s"), PDO::PARAM_INT);
+            $consulta->bindValue(':accion',$accion, PDO::PARAM_STR);
+            $consulta->bindValue(':hora_accion',date("Y-m-d H:i:s"), PDO::PARAM_STR);
 
-            $consulta->execute();            
+            return $consulta->execute();            
         }
     }
 
@@ -33,7 +38,7 @@ class Logs
         $id_estadoAux = -1;
         $id_responsableAux = -1;
 
-        $pedidos = Pedido::TraerTodoLosPedidos();
+        $pedidos = Pedido::all();
 
         foreach ($pedidos as $pedido) {
             if ($pedido->idPedido == $idPedido) {

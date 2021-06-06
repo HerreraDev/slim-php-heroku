@@ -3,7 +3,12 @@ Preguntar:
 
 Pendientes:
 -Poder tomar foto de los pedidos
--Poder poner codigo de pedido y codigo de mesa para ver el tiempo estimado
+-Cargar csv y guardar csv.
+
+:
+
+
+Tabla logMesas:
 
 
 Listos:
@@ -11,3 +16,11 @@ Listos:
 -Poder agregar tiempo estimado al pedido
 -Poder tomar los pedidos
 -Mozo tiene que ver pedidos con id 2 que son los "Listos para servir", elije uno de esos y ahi se actualiza el pedido a "Servido" y la mesa a "con cliente comiendo.
+
+Listos:
+-ORM.
+-Tabla userLogs: Cambiar para que se guarde la accion.
+-Poder poner codigo de pedido y codigo de mesa para ver el tiempo estimado (el que mas va a tardar).
+-Tabla tickets: Que mesa, que comio, que pago, como pago, cuando se fue.
+-Cliente puede consultar tiempo estimado.
+-Cliente puede pagar.
