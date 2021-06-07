@@ -24,9 +24,9 @@ class auxMesa{
 		return $verificado;
 	}
 
-	public function mostrarDatos()
+	public static function mostrarDatos($mesa)
 	{
-        return "Datos: ".$this->numero_de_mesa." ".$this->max_personas;
+        return $mesa->idMesa.",".$mesa->numero_de_mesa.",".$mesa->max_personas.",".$mesa->id_estado.",".$mesa->fecha_eliminacion;
 	}
 
 	public static function ObtenerIdPorNumeroMesa($numDeMesa)
@@ -48,13 +48,13 @@ class auxMesa{
 	}
 
 
-    public static function GuardarEnJson($mesa, $mode)
+    public static function GuardarEnCsv($mesa, $mode)
     {
 
-        $direccionArchivo = fopen("csv/Mesas.json", $mode);
+        $direccionArchivo = fopen("csv/Mesas.csv", $mode);
 
         if ($direccionArchivo != false) {
-            if (fwrite($direccionArchivo, json_encode($mesa) . "\n") != false) {
+            if (fwrite($direccionArchivo, self::mostrarDatos($mesa) . "\n") != false) {
                 fclose($direccionArchivo);
                 return 1;
             } else {
@@ -73,11 +73,11 @@ class auxMesa{
         $mode = "w";
 
         foreach ($mesas as $mesa) {
-            self::GuardarEnJson($mesa, $mode);
+            self::GuardarEnCsv($mesa, $mode);
             $mode = "a";
         }
 
-        echo "Csv generado en la ruta /csv/Mesas.json";
+        echo "Csv generado en la ruta /csv/Mesas.csv";
     }
 }
 

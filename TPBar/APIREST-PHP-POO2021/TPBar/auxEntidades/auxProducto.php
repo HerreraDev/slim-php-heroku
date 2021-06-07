@@ -24,9 +24,9 @@ class auxProducto{
 		return $verificado;
 	}
 
-	public function mostrarDatos()
+	public static function mostrarDatos($producto)
 	{
-        return "Datos: ".$this->codigo_de_barra." ".$this->nombre."  ".$this->tipo." ".$this->stock." ".$this->precio." ".$this->fecha_de_creacion." ".$this->fecha_de_modificacion." ".$this->ruta_foto;
+        return $producto->idProducto.",".$producto->codigo_de_barra.",".$producto->nombre.",".$producto->tipo.",".$producto->stock.",".$producto->precio.",".$producto->fecha_de_creacion.",".$producto->fecha_de_modificacion.",".$producto->ruta_foto;
 	}
 
 	public static function ObtenerIdProductoPorNombre($nombreProd)
@@ -68,13 +68,13 @@ class auxProducto{
 	}
 
 
-    public static function GuardarEnJson($producto, $mode)
+    public static function GuardarEnCsv($producto, $mode)
     {
 
-        $direccionArchivo = fopen("csv/Productos.json", $mode);
+        $direccionArchivo = fopen("csv/Productos.csv", $mode);
 
         if ($direccionArchivo != false) {
-            if (fwrite($direccionArchivo, json_encode($producto) . "\n") != false) {
+            if (fwrite($direccionArchivo, self::mostrarDatos($producto) . "\n") != false) {
                 fclose($direccionArchivo);
                 return 1;
             } else {
@@ -93,11 +93,11 @@ class auxProducto{
         $mode = "w";
 
         foreach ($productos as $prod) {
-            self::GuardarEnJson($prod, $mode);
+            self::GuardarEnCsv($prod, $mode);
             $mode = "a";
         }
 
-        echo "Csv generado en la ruta /csv/Productos.json";
+        echo "Csv generado en la ruta /csv/Productos.csv";
     }
 
 

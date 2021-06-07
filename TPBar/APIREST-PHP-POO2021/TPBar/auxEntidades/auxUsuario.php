@@ -30,14 +30,14 @@ class auxUsuario
         return $verificado;
     }
 
-    public function mostrarDatos()
+    public static function mostrarDatos($usuario)
     {
-        return "Datos:" . $this->nombre . "  " . $this->apellido . " " . $this->clave . " " . $this->mail . " " . $this->empleo . " " . $this->fecha_de_ingreso;
+        return $usuario->idUsuario.",".$usuario->nombre . "," . $usuario->apellido . "," . $usuario->clave . "," . $usuario->mail . "," . $usuario->empleo . "," . $usuario->fecha_de_ingreso.",".$usuario->ruta_foto.",".$usuario->fecha_de_salida;
     }
 
     public static function GenerarPdf()
     {
-        $lista = self::TraerTodoLosUsuarios();
+        $lista = Usuario::all();
 
         $string = "";
         foreach ($lista as $user) {
@@ -94,13 +94,13 @@ class auxUsuario
     //--------------------------------------------------//
     //CSV
 
-    public static function GuardarEnJson($usuario, $mode)
+    public static function GuardarEnCsv($usuario, $mode)
     {
 
-        $direccionArchivo = fopen("csv/Usuarios.json", $mode);
+        $direccionArchivo = fopen("csv/Usuarios.csv", $mode);
 
         if ($direccionArchivo != false) {
-            if (fwrite($direccionArchivo, json_encode($usuario) . "\n") != false) {
+            if (fwrite($direccionArchivo, auxUsuario::mostrarDatos($usuario). "\n") != false) {
                 fclose($direccionArchivo);
                 return 1;
             } else {
@@ -119,11 +119,11 @@ class auxUsuario
         $mode = "w";
 
         foreach ($usuarios as $user) {
-            self::GuardarEnJson($user, $mode);
+            self::GuardarEnCsv($user, $mode);
             $mode = "a";
         }
 
-        echo "Csv generado en la ruta /csv/Usuarios.json";
+        echo "Csv generado en la ruta /csv/Usuarios.csv";
     }
 
 

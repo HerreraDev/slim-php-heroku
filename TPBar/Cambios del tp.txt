@@ -3,7 +3,7 @@ Preguntar:
 
 Pendientes:
 -Poder tomar foto de los pedidos
--Cargar csv y guardar csv.
+-Cargar csv.
 
 
 Tabla logMesas:

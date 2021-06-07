@@ -19,6 +19,10 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class auxPedido
 {
 
+    public static function mostrarDatos($pedido)
+    {
+        return $pedido->idPedido.",".$pedido->numero_pedido.",".$pedido->id_usuario.",".$pedido->id_mesa.",".$pedido->id_estado.",".$pedido->id_producto.",".$pedido->cantidad.",".$pedido->id_responsable.",".$pedido->precio_final.",".$pedido->fecha_hora_de_ingreso.",".$pedido->tiempo_estimado;
+    }
 
     public static function AlfanumericoRandom($length)
     {
@@ -161,13 +165,13 @@ class auxPedido
         }
     }
 
-    public static function GuardarEnJson($pedido, $mode)
+    public static function GuardarEnCsv($pedido, $mode)
     {
 
         $direccionArchivo = fopen("csv/Pedidos.json", $mode);
 
         if ($direccionArchivo != false) {
-            if (fwrite($direccionArchivo, json_encode($pedido) . "\n") != false) {
+            if (fwrite($direccionArchivo, self::mostrarDatos($pedido) . "\n") != false) {
                 fclose($direccionArchivo);
                 return 1;
             } else {
@@ -186,7 +190,7 @@ class auxPedido
         $mode = "w";
 
         foreach ($pedidos as $pedido) {
-            self::GuardarEnJson($pedido, $mode);
+            self::GuardarEnCsv($pedido, $mode);
             $mode = "a";
         }
 
