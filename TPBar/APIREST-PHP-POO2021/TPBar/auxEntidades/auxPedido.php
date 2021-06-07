@@ -168,7 +168,7 @@ class auxPedido
     public static function GuardarEnCsv($pedido, $mode)
     {
 
-        $direccionArchivo = fopen("csv/Pedidos.json", $mode);
+        $direccionArchivo = fopen("csv/Pedidos.csv", $mode);
 
         if ($direccionArchivo != false) {
             if (fwrite($direccionArchivo, self::mostrarDatos($pedido) . "\n") != false) {
@@ -194,7 +194,7 @@ class auxPedido
             $mode = "a";
         }
 
-        echo "Csv generado en la ruta /csv/Pedidos.json";
+        echo "Csv generado en la ruta /csv/Pedidos.csv";
     }
 
     public static function GenerarPdf()

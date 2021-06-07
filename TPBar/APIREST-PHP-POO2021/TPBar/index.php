@@ -140,6 +140,18 @@ $app->group('/csv/descargar', function(){
 
 });
 
+$app->group('/csv/carga', function(){
+
+  $this->post('/usuarios', \auxUsuario::class . ':CargarDeCSV');
+
+  $this->post('/productos', \auxProducto::class . ':CargarDeCSV');
+
+  $this->post('/mesas', \auxMesa::class . ':CargarDeCSV');
+
+  $this->post('/pedidos', \auxPedido::class . ':CargarDeCSV');
+
+});
+
 $app->group('/pdf', function(){
 
   $this->get('/usuarios', \auxUsuario::class . ':GenerarPDF');
@@ -152,6 +164,21 @@ $app->group('/pdf', function(){
 
 });
 
+
+//------------------------------------------------------------//
+//Listados:
+
+$app->group('/administracion/empleado', function(){
+
+  $this->get('/a', \auxUsuario::class . ':listadoA');
+
+  $this->get('/b', \auxUsuario::class . ':ticetksGet');
+
+  $this->get('/c', \auxMesa::class . ':listadoC');
+
+  $this->get('/d', \auxPedido::class . ':listadoD');
+
+});
 
 $app->run();
 

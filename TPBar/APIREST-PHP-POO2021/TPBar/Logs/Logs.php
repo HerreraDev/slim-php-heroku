@@ -5,8 +5,11 @@ require_once './auxEntidades/auxUsuario.php';
 require_once './auxEntidades/auxPedido.php';
 
 include_once "./models/Pedido.php";
+include_once "./models/UserLogs.php";
+
 
 use App\Models\Pedido as Pedido;
+use App\Models\UserLogs as UserLogs;
 
 class Logs
 {
@@ -17,14 +20,14 @@ class Logs
         $idResponsable = auxUsuario::ObtenerIdPorMail($mail);
         if ($idResponsable != -1) {
 
-            $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta = $objetoAccesoDato->RetornarConsulta("INSERT INTO `userLogs`(`id_usuario`, `accion`, `hora_accion`) VALUES (:id_usuario,:accion,:hora_accion)");
 
-            $consulta->bindValue(':id_usuario',$idResponsable, PDO::PARAM_INT);
-            $consulta->bindValue(':accion',$accion, PDO::PARAM_STR);
-            $consulta->bindValue(':hora_accion',date("Y-m-d H:i:s"), PDO::PARAM_STR);
+            $logUsuario = new UserLogs();
 
-            return $consulta->execute();            
+            $logUsuario->id_usuario = $idResponsable;
+            $logUsuario->accion = $accion;
+            $logUsuario->hora_accion = date("Y-m-d H:i:s");
+
+            $logUsuario->save();           
         }
     }
 

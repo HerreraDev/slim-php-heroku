@@ -2,8 +2,13 @@
 
 require_once './fpdf183/fpdf.php';
 require_once './models/Usuario.php';
+require_once './models/Ticket.php';
 
 use App\Models\Usuario as Usuario;
+use App\Models\UserLogs as UserLogs;
+use App\Models\Ticket as Tickets;
+
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class auxUsuario
 {
@@ -32,7 +37,7 @@ class auxUsuario
 
     public static function mostrarDatos($usuario)
     {
-        return $usuario->idUsuario.",".$usuario->nombre . "," . $usuario->apellido . "," . $usuario->clave . "," . $usuario->mail . "," . $usuario->empleo . "," . $usuario->fecha_de_ingreso.",".$usuario->ruta_foto.",".$usuario->fecha_de_salida;
+        return $usuario->idUsuario . "," . $usuario->nombre . "," . $usuario->apellido . "," . $usuario->clave . "," . $usuario->mail . "," . $usuario->empleo . "," . $usuario->fecha_de_ingreso . "," . $usuario->ruta_foto . "," . $usuario->fecha_de_salida;
     }
 
 
@@ -79,7 +84,7 @@ class auxUsuario
         $direccionArchivo = fopen("csv/Usuarios.csv", $mode);
 
         if ($direccionArchivo != false) {
-            if (fwrite($direccionArchivo, auxUsuario::mostrarDatos($usuario). "\n") != false) {
+            if (fwrite($direccionArchivo, auxUsuario::mostrarDatos($usuario) . "\n") != false) {
                 fclose($direccionArchivo);
                 return 1;
             } else {
@@ -107,34 +112,43 @@ class auxUsuario
 
 
 
-    // public static function LeerDeJson($archivo){
+    public static function CargarDeCSV($archivo)
+    {
 
-    //     $vec = array();
-    //     $productos = array();
-    //     $archivo = fopen($archivo, "r");
+        $archivo = "csv/carga/cargarUsuarios.csv";
+        $direccionArchivo = fopen($archivo, "r");
+
+        $arrayDatos = array();
+
+        if($direccionArchivo != false)
+        {
+            while($arrayDatos = fgetcsv($direccionArchivo,1000,","))
+            {
+
+                for($i=0; $i<count($arrayDatos);$i++){
+                    echo $arrayDatos[$i] . "<br />\n";
+                }
 
 
-    //     if($archivo != false){
+                $user = new Usuario();
+                $user->nombre= $arrayDatos[0];$user->apellido=$arrayDatos[1];$user->clave=$arrayDatos[2];
+                $user->mail=$arrayDatos[3];
+                $user->fecha_de_ingreso=$arrayDatos[4];
+                $user->empleo=$arrayDatos[5];
+                $user->ruta_foto=$arrayDatos[6];
 
-    //         while(!feof($archivo))
-    //         {
-    //             $lectura = fgets($archivo);
-    //             $vec = json_decode($lectura, true);
+                $user->save();
+                
+            }
 
-    //             if($vec != null)
-    //             {
-    //                 $prod = new Pizza($vec["idPizza"],$vec["sabor"],$vec["precio"],$vec["tipo"], $vec["cantidad"]);
+            fclose($direccionArchivo);
 
-    //                 array_push($productos,$prod); 
-    //             }
-
-    //         }
-
-    //         fclose($archivo);
-    //     }
-
-    //     return $productos;
-    // }
+        }
+        else
+        {
+            echo "No existe el archivo";
+        }
+    }
 
     public static function GenerarPdf()
     {
@@ -145,17 +159,36 @@ class auxUsuario
         $pdf->SetFont('Arial', 'B', 16);
 
         foreach ($lista as $user) {
-            $pdf->Cell(40, 10, $user->nombre,1, 0, 'C',0);
-            $pdf->Cell(40, 10, $user->apellido,1,0,'C',0);
-            $pdf->Cell(40, 10, $user->empleo,1,0,'C',0);
-            $pdf->Cell(40, 10, $user->fecha_de_ingreso,1,1,'C',0);
-
+            $pdf->Cell(40, 10, $user->nombre, 1, 0, 'C', 0);
+            $pdf->Cell(40, 10, $user->apellido, 1, 0, 'C', 0);
+            $pdf->Cell(40, 10, $user->empleo, 1, 0, 'C', 0);
+            $pdf->Cell(40, 10, $user->fecha_de_ingreso, 1, 1, 'C', 0);
         }
 
-        echo $pdf->Output("usuarios.pdf","F");
+        echo $pdf->Output("usuarios.pdf", "F");
 
         echo "Pdf de usuarios generado en /pdf/usuarios.pdf";
     }
 
+    //------------------------------------------------------------------//
+    //Listados:
 
+    public static function listadoA(){
+
+        $logs = UserLogs::all()->where('accion',"=", "Login");
+
+        //$arrayDiaHoraLogin = Capsule::table('userLogs')
+
+        return $arrayDiaHoraLogin;
+    }
+
+    
+    public static function ticetksGet(){
+
+        $logs = Tickets::all();
+
+        return $logs;
+    }
+
+    
 }

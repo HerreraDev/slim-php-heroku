@@ -6,10 +6,10 @@ namespace App\Models;
 require_once "../vendor/autoload.php";
 
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes as SoftDeletes;
  
-class Usuario extends Model { 
+class Usuario extends Eloquent { 
     
     use SoftDeletes;
 

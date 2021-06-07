@@ -23,4 +23,5 @@ Listos:
 -Cliente puede consultar tiempo estimado.
 -Cliente puede pagar.
 -Cliente puede opinar.
--guardar csv.
+-guardar csv y cargar de csv.
+-pdfs.

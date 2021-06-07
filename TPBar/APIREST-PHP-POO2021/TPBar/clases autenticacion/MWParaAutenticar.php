@@ -14,10 +14,9 @@ class MWParaAutenticar
 
 
       $response = $next($request, $response);
-    } else if($request->isPut()){
+    } else if ($request->isPut()) {
       $response = $next($request, $response);
-    }
-    else {
+    } else {
 
       $header = $request->getHeaderLine('Authorization');
       $token = trim(explode("Bearer", $header)[1]);
@@ -50,6 +49,47 @@ class MWParaAutenticar
         return $nueva;
       }
     }
+
+
+    return $response;
+  }
+
+  public function EsAdmin($request, $response, $next)
+  {
+    $objDelaRespuesta = new stdclass();
+    $objDelaRespuesta->respuesta = "";
+
+    $header = $request->getHeaderLine('Authorization');
+    $token = trim(explode("Bearer", $header)[1]);
+
+
+    try {
+      AutentificadorJWT::verificarToken($token);
+      $objDelaRespuesta->esValido = true;
+    } catch (Exception $e) {
+      //guardar en un log
+      $objDelaRespuesta->excepcion = $e->getMessage();
+      $objDelaRespuesta->esValido = false;
+    }
+
+
+    if ($objDelaRespuesta->esValido) {
+      $payload = AutentificadorJWT::ObtenerData($token);
+
+      if ($payload->empleo == "Socio") {
+        $response = $next($request, $response);
+      } else {
+        $objDelaRespuesta->respuesta = "ERROR. Solo socios puede alterar la base de datos de productos.";
+      }
+    } else {
+      $objDelaRespuesta->respuesta = "Usuario no registrado";
+    }
+
+    if ($objDelaRespuesta->respuesta != "") {
+      $nueva = $response->withJson($objDelaRespuesta, 401);
+      return $nueva;
+    }
+
 
 
     return $response;
