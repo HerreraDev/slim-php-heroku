@@ -9,6 +9,7 @@ require_once './models/Mesa.php';
 require_once './models/Pedido.php';
 require_once './models/Producto.php';
 require_once './models/Usuario.php';
+require_once './models/Encuesta.php';
 
 require_once './Logs/Logs.php';
 
@@ -18,6 +19,7 @@ require_once './clases/IApiUsable.php';
 
 use App\Models\Pedido as Pedido;
 use App\Models\Mesa as Mesa;
+use App\Models\Encuesta as Encuesta;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 
@@ -269,30 +271,57 @@ class PedidoApi implements IApiUsable
         }
     }
 
-    public function ConsultarTiempoEspera($request, $response, $args){
+    public function ConsultarTiempoEspera($request, $response, $args)
+    {
         $id = $args['numero_pedido'];
 
-        $pedidoMax = Capsule::table('pedidos')->where('numero_pedido', $id) ->max("tiempo_estimado");
+        $pedidoMax = Capsule::table('pedidos')->where('numero_pedido', $id)->max("tiempo_estimado");
 
-        echo "Tiempo estimado para entrega: ",$pedidoMax, " minutos."; 
-    } 
+        echo "Tiempo estimado para entrega: ", $pedidoMax, " minutos.";
+    }
 
-    public function PagarCuenta($request, $response, $args){
+    public function PagarCuenta($request, $response, $args)
+    {
 
         $ArrayDeParametros = $request->getParsedBody();
 
         $numero_pedido = $ArrayDeParametros["numero_pedido"];
         $metodoPago = $ArrayDeParametros["metodoPago"];
-        if(auxPedido::OperacionCobro($numero_pedido,$metodoPago))
-        {
+        if (auxPedido::OperacionCobro($numero_pedido, $metodoPago)) {
             echo "Pago realizado con exito!!";
-        }
-        else
-        {
+        } else {
             echo "Algo fallo";
         }
+    }
 
+    public function PuntuarAtencion($request, $response, $args)
+    {
+        $ArrayDeParametros = $request->getParsedBody();
+        $numero_pedido = $ArrayDeParametros["numero_pedido"];
+        $mesa = $ArrayDeParametros["mesa"];
+        $restaurante = $ArrayDeParametros["restaurante"];
+        $mozo = $ArrayDeParametros["mozo"];
+        $cocinero = $ArrayDeParametros["cocinero"];
+        $experiencia = $ArrayDeParametros["experiencia"];
 
+        $encuesta = new Encuesta();
 
+        $encuesta->numero_pedido = $numero_pedido;
+        $encuesta->mesa = $mesa;
+        $encuesta->restaurante = $restaurante;
+        $encuesta->mozo = $mozo;
+        $encuesta->cocinero = $cocinero;
+        $encuesta->experiencia = $experiencia;
+        //$encuesta->fecha_eliminacion = NULL;
+        $encuesta->save();
+
+        //Actualizo estado de la mesa
+        $auxPedido = Capsule::table('pedidos')->where('numero_pedido', $numero_pedido)->first();
+        $auxMesa = new Mesa();
+        $MesaAct = $auxMesa->find($auxPedido->id_mesa);
+        $MesaAct->id_estado = 0;
+        $MesaAct->save();
+
+        echo "Gracias, encuesta guardada.";
     }
 }

@@ -1,0 +1,7 @@
+{"idUsuario":110,"nombre":"Rocio","apellido":"Calvo","clave":"124434","mail":"rociocalvo@mail.com","fecha_de_ingreso":"2021-05-08","empleo":"Mozo","ruta_foto":"","fecha_de_salida":null}
+{"idUsuario":111,"nombre":"Marcos","apellido":"Acu\u00f1a","clave":"1234","mail":"MarcosAcu\u00f1a@mail.com","fecha_de_ingreso":"2021-05-10","empleo":"Cervezero","ruta_foto":"","fecha_de_salida":null}
+{"idUsuario":112,"nombre":"Lautaro","apellido":"Martinez","clave":"123456","mail":"LautaroMartinez@mail.com","fecha_de_ingreso":"2021-05-10","empleo":"Bartender","ruta_foto":"","fecha_de_salida":null}
+{"idUsuario":113,"nombre":"Jose","apellido":"Messi","clave":"123456","mail":"JoseMessi@mail.com","fecha_de_ingreso":"2021-05-10","empleo":"Socio","ruta_foto":"","fecha_de_salida":null}
+{"idUsuario":114,"nombre":"Roberto","apellido":"Ronaldo","clave":"12345666","mail":"RobertoRonaldo@mail.com","fecha_de_ingreso":"2021-05-16","empleo":"Cocinero","ruta_foto":".\/fotos\/usuarios\/Roberto.jpg","fecha_de_salida":null}
+{"idUsuario":115,"nombre":"Sancho","apellido":"Panza","clave":"Sin clave","mail":"SanchoPanza@mail.com","fecha_de_ingreso":"2021-05-18","empleo":"Cliente","ruta_foto":".\/fotos\/usuarios\/Sancho.jpg","fecha_de_salida":null}
+{"idUsuario":116,"nombre":"Jeremias","apellido":"Springfield","clave":"Sin clave","mail":"JeremiasSpringfield@mail.com","fecha_de_ingreso":"2021-05-18","empleo":"Cliente","ruta_foto":".\/fotos\/usuarios\/JeremiasSpringfield@mail.com.jpg","fecha_de_salida":null}

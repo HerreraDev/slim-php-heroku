@@ -68,6 +68,39 @@ class auxProducto{
 	}
 
 
+    public static function GuardarEnJson($producto, $mode)
+    {
+
+        $direccionArchivo = fopen("csv/Productos.json", $mode);
+
+        if ($direccionArchivo != false) {
+            if (fwrite($direccionArchivo, json_encode($producto) . "\n") != false) {
+                fclose($direccionArchivo);
+                return 1;
+            } else {
+                fclose($direccionArchivo);
+                return 0;
+            }
+        }
+    }
+
+    public static function GenerarCSV()
+    {
+
+        $productos = array();
+        $productos = Producto::all();
+
+        $mode = "w";
+
+        foreach ($productos as $prod) {
+            self::GuardarEnJson($prod, $mode);
+            $mode = "a";
+        }
+
+        echo "Csv generado en la ruta /csv/Productos.json";
+    }
+
+
 
 
 

@@ -5,8 +5,6 @@ Pendientes:
 -Poder tomar foto de los pedidos
 -Cargar csv y guardar csv.
 
-:
-
 
 Tabla logMesas:
 
@@ -24,3 +22,5 @@ Listos:
 -Tabla tickets: Que mesa, que comio, que pago, como pago, cuando se fue.
 -Cliente puede consultar tiempo estimado.
 -Cliente puede pagar.
+-Cliente puede opinar.
+-guardar csv.

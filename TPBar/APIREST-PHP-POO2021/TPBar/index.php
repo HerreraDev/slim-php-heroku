@@ -54,8 +54,6 @@ $app->post('/login', \usuarioApi::class . ':LoginUsuario');
 $app->group('/usuario', function () {
  
   $this->get('/', \usuarioApi::class . ':traerTodos');
-
-  $this->get('/pdf', \Usuario::class . ':GenerarPdf');
  
   $this->get('/{id}', \usuarioApi::class . ':traerUno');
 
@@ -64,7 +62,7 @@ $app->group('/usuario', function () {
   $this->delete('/{id}', \usuarioApi::class . ':BorrarUno');
 
   $this->put('/', \usuarioApi::class . ':ModificarUno');
-     
+
 })->add(\MWParaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
 $app->group('/producto', function () {
@@ -127,9 +125,20 @@ $app->group('/cliente', function(){
 
   $this->post('/puntuar', \PedidoApi::class . ':PuntuarAtencion');
 
-
 });
 
+
+$app->group('/csv/descargar', function(){
+
+  $this->get('/usuarios', \auxUsuario::class . ':GenerarCSV');
+
+  $this->get('/productos', \auxProducto::class . ':GenerarCSV');
+
+  $this->get('/mesas', \auxMesa::class . ':GenerarCSV');
+
+  $this->get('/pedidos', \auxPedido::class . ':GenerarCSV');
+
+});
 
 
 $app->run();

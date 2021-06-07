@@ -160,4 +160,36 @@ class auxPedido
             return -1;
         }
     }
+
+    public static function GuardarEnJson($pedido, $mode)
+    {
+
+        $direccionArchivo = fopen("csv/Pedidos.json", $mode);
+
+        if ($direccionArchivo != false) {
+            if (fwrite($direccionArchivo, json_encode($pedido) . "\n") != false) {
+                fclose($direccionArchivo);
+                return 1;
+            } else {
+                fclose($direccionArchivo);
+                return 0;
+            }
+        }
+    }
+
+    public static function GenerarCSV()
+    {
+
+        $pedidos = array();
+        $pedidos = Pedido::all();
+
+        $mode = "w";
+
+        foreach ($pedidos as $pedido) {
+            self::GuardarEnJson($pedido, $mode);
+            $mode = "a";
+        }
+
+        echo "Csv generado en la ruta /csv/Pedidos.json";
+    }
 }

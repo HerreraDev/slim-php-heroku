@@ -48,7 +48,37 @@ class auxMesa{
 	}
 
 
+    public static function GuardarEnJson($mesa, $mode)
+    {
 
+        $direccionArchivo = fopen("csv/Mesas.json", $mode);
+
+        if ($direccionArchivo != false) {
+            if (fwrite($direccionArchivo, json_encode($mesa) . "\n") != false) {
+                fclose($direccionArchivo);
+                return 1;
+            } else {
+                fclose($direccionArchivo);
+                return 0;
+            }
+        }
+    }
+
+    public static function GenerarCSV()
+    {
+
+        $mesas = array();
+        $mesas = Mesa::all();
+
+        $mode = "w";
+
+        foreach ($mesas as $mesa) {
+            self::GuardarEnJson($mesa, $mode);
+            $mode = "a";
+        }
+
+        echo "Csv generado en la ruta /csv/Mesas.json";
+    }
 }
 
 
