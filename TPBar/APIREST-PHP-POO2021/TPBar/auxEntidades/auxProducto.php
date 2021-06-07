@@ -101,6 +101,27 @@ class auxProducto{
     }
 
 
+    public static function GenerarPdf()
+    {
+        $lista = Producto::all();
+
+        $pdf = new FPDF('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 16);
+
+        foreach ($lista as $user) {
+            $pdf->Cell(40, 10, $user->codigo_de_barra,1, 0, 'C',0);
+            $pdf->Cell(40, 10, $user->stock,1,0,'C',0);
+            $pdf->Cell(40, 10, $user->precio,1,0,'C',0);
+            $pdf->Cell(40, 10, $user->fecha_de_creacion,1,1,'C',0);
+
+        }
+
+        echo $pdf->Output("productos.pdf","F");
+
+        echo "Pdf de productos generado productos.pdf";
+    }
+
 
 
 

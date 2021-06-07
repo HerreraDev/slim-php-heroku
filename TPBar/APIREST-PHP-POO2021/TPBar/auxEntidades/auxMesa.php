@@ -79,6 +79,26 @@ class auxMesa{
 
         echo "Csv generado en la ruta /csv/Mesas.csv";
     }
+
+    public static function GenerarPdf()
+    {
+        $lista = Mesa::all();
+
+        $pdf = new FPDF('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 16);
+
+        foreach ($lista as $user) {
+            $pdf->Cell(40, 10, $user->numero_de_mesa,1, 0, 'C',0);
+            $pdf->Cell(40, 10, $user->max_personas,1,0,'C',0);
+            $pdf->Cell(40, 10, $user->id_estado,1,1,'C',0);
+
+        }
+
+        echo $pdf->Output("mesas.pdf","F");
+
+        echo "Pdf de mesas generado productos.pdf";
+    }
 }
 
 

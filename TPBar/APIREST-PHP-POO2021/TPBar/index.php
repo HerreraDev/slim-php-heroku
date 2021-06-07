@@ -140,6 +140,18 @@ $app->group('/csv/descargar', function(){
 
 });
 
+$app->group('/pdf', function(){
+
+  $this->get('/usuarios', \auxUsuario::class . ':GenerarPDF');
+
+  $this->get('/productos', \auxProducto::class . ':GenerarPDF');
+
+  $this->get('/mesas', \auxMesa::class . ':GenerarPDF');
+
+  $this->get('/pedidos', \auxPedido::class . ':GenerarPDF');
+
+});
+
 
 $app->run();
 

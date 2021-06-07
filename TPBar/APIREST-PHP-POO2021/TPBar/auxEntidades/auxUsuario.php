@@ -35,27 +35,6 @@ class auxUsuario
         return $usuario->idUsuario.",".$usuario->nombre . "," . $usuario->apellido . "," . $usuario->clave . "," . $usuario->mail . "," . $usuario->empleo . "," . $usuario->fecha_de_ingreso.",".$usuario->ruta_foto.",".$usuario->fecha_de_salida;
     }
 
-    public static function GenerarPdf()
-    {
-        $lista = Usuario::all();
-
-        $string = "";
-        foreach ($lista as $user) {
-            foreach ($user as $item) {
-                $string = $string . $item;
-            }
-        }
-
-        echo $string;
-
-        $pdf = new FPDF('P', 'mm', 'A4');
-        $pdf->AddPage();
-        $pdf->SetFont('Arial', 'B', 16);
-        $pdf->Cell(40, 10, $string);
-        $pdf->Output('./pdfs/users.pdf', 'F');
-
-        echo "pdf generado";
-    }
 
     public static function ObtenerIdPorMail($mail)
     {
@@ -156,4 +135,27 @@ class auxUsuario
 
     //     return $productos;
     // }
+
+    public static function GenerarPdf()
+    {
+        $lista = Usuario::all();
+
+        $pdf = new FPDF('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 16);
+
+        foreach ($lista as $user) {
+            $pdf->Cell(40, 10, $user->nombre,1, 0, 'C',0);
+            $pdf->Cell(40, 10, $user->apellido,1,0,'C',0);
+            $pdf->Cell(40, 10, $user->empleo,1,0,'C',0);
+            $pdf->Cell(40, 10, $user->fecha_de_ingreso,1,1,'C',0);
+
+        }
+
+        echo $pdf->Output("usuarios.pdf","F");
+
+        echo "Pdf de usuarios generado en /pdf/usuarios.pdf";
+    }
+
+
 }
